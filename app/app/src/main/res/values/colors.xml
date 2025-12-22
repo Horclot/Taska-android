@@ -7,4 +7,14 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Taska colors -->
+    <color name="primary_dark">#0A0B2A</color>
+    <color name="primary_purple">#1A0F3E</color>
+    <color name="accent_purple">#6C4BDF</color>
+    <color name="light_purple">#8A6BFF</color>
+    <color name="accent_blue">#A0B0FF</color>
+    <color name="accent_pink">#FF6B9D</color>
+    <color name="button_gradient_start">#6C4BDF</color>
+    <color name="button_gradient_end">#8A6BFF</color>
 </resources>
