@@ -171,8 +171,8 @@ class StartActivity : AppCompatActivity() {
                         .setDuration(400)
                         .setInterpolator(android.view.animation.AccelerateDecelerateInterpolator())
                         .withEndAction {
-                            // Переход на MainActivity
-                            val intent = Intent(this@StartActivity, MainActivity::class.java)
+                            // Переход на LoginActivity вместо MainActivity
+                            val intent = Intent(this@StartActivity, LoginActivity::class.java)
                             startActivity(intent)
                             // Плавный переход
                             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
