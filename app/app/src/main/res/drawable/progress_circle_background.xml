@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:innerRadiusRatio="3"
-    android:shape="ring"
-    android:thickness="8dp"
-    android:useLevel="false">
-    <solid android:color="#20FFFFFF"/>
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape
+            android:shape="ring"
+            android:innerRadius="80dp"
+            android:thickness="4dp"
+            android:useLevel="false">
+            <solid android:color="#20FFFFFF" />
+        </shape>
+    </item>
+    <item>
+        <rotate
+            android:fromDegrees="0"
+            android:toDegrees="360">
+            <shape
+                android:shape="ring"
+                android:innerRadius="80dp"
+                android:thickness="4dp"
+                android:useLevel="true">
+                <gradient
+                    android:startColor="#FF6B6B"
+                    android:endColor="#6677FF"
+                    android:type="sweep" />
+            </shape>
+        </rotate>
+    </item>
+</layer-list>

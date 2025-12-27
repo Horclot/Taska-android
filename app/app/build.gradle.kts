@@ -41,6 +41,12 @@ android {
 
 dependencies {
 
+    implementation ("com.google.firebase:firebase-firestore-ktx:24.10.0")
+
+    implementation ("com.google.android.material:material:1.11.0")
+
+    implementation ("com.google.firebase:firebase-firestore")
+
     implementation(platform("com.google.firebase:firebase-bom:34.7.0"))
     implementation("com.google.firebase:firebase-analytics")
 
