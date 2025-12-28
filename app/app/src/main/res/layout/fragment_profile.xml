@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
     android:background="@drawable/background_gradient"
-    android:fitsSystemWindows="true">
+    android:fillViewport="true"
+    android:fitsSystemWindows="false">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -30,23 +30,23 @@
             android:id="@+id/animatedBgCircle1"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            android:background="@drawable/profile_circle_background"
-            android:alpha="0.1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="-150dp"
-            android:layout_marginEnd="-100dp"/>
+            android:layout_marginEnd="-100dp"
+            android:alpha="0.1"
+            android:background="@drawable/profile_circle_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/animatedBgCircle2"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:background="@drawable/profile_circle_background"
-            android:alpha="0.15"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/profileCard"
             android:layout_marginStart="-80dp"
-            android:layout_marginBottom="100dp"/>
+            android:layout_marginBottom="100dp"
+            android:alpha="0.15"
+            android:background="@drawable/profile_circle_background"
+            app:layout_constraintBottom_toTopOf="@id/profileCard"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <!-- Контейнер для всех плавающих частиц -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -133,7 +133,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/avatarContainer"/>
+                app:layout_constraintTop_toBottomOf="@id/avatarContainer" />
 
             <!-- Email -->
             <TextView
@@ -141,21 +141,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:alpha="0.8"
                 android:text="alex@taska.com"
                 android:textColor="#A0B0FF"
                 android:textSize="14sp"
-                android:alpha="0.8"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/userName"/>
+                app:layout_constraintTop_toBottomOf="@id/userName" />
 
             <!-- Статистика в строку -->
             <LinearLayout
-                android:id="@+id/statsRow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
                 android:layout_marginStart="-16dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginEnd="-16dp"
                 android:divider="@drawable/vertical_divider"
                 android:gravity="center"
@@ -243,9 +242,9 @@
                         android:layout_height="wrap_content"
                         android:alpha="0.8"
                         android:text="Пространств"
+                        android:textAlignment="center"
                         android:textColor="#A0B0FF"
-                        android:textSize="12sp"
-                        android:textAlignment="center" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -265,15 +264,15 @@
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profileCard"/>
+            app:layout_constraintTop_toBottomOf="@id/profileCard" />
 
         <HorizontalScrollView
             android:id="@+id/achievementsScroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:paddingHorizontal="24dp"
             android:fadingEdgeLength="32dp"
+            android:paddingHorizontal="24dp"
             android:requiresFadingEdge="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -305,16 +304,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="🔥"
-                            android:textSize="24sp"/>
+                            android:textSize="24sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="7 дней"
+                            android:textAlignment="center"
                             android:textColor="@android:color/white"
-                            android:textSize="10sp"
-                            android:textAlignment="center"/>
+                            android:textSize="10sp" />
 
                     </LinearLayout>
 
@@ -339,16 +338,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="⚡"
-                            android:textSize="24sp"/>
+                            android:textSize="24sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="100 задач"
+                            android:textAlignment="center"
                             android:textColor="@android:color/white"
-                            android:textSize="10sp"
-                            android:textAlignment="center"/>
+                            android:textSize="10sp" />
 
                     </LinearLayout>
 
@@ -373,16 +372,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="🏆"
-                            android:textSize="24sp"/>
+                            android:textSize="24sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="Мастер"
+                            android:textAlignment="center"
                             android:textColor="@android:color/white"
-                            android:textSize="10sp"
-                            android:textAlignment="center"/>
+                            android:textSize="10sp" />
 
                     </LinearLayout>
 
@@ -407,16 +406,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="🎯"
-                            android:textSize="24sp"/>
+                            android:textSize="24sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="Точность"
+                            android:textAlignment="center"
                             android:textColor="@android:color/white"
-                            android:textSize="10sp"
-                            android:textAlignment="center"/>
+                            android:textSize="10sp" />
 
                     </LinearLayout>
 
@@ -438,16 +437,16 @@
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/achievementsScroll"/>
+            app:layout_constraintTop_toBottomOf="@id/achievementsScroll" />
 
         <LinearLayout
             android:id="@+id/settingsList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginHorizontal="24dp"
-            android:orientation="vertical"
+            android:layout_marginTop="16dp"
             android:background="@drawable/profile_card_background"
+            android:orientation="vertical"
             android:padding="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -458,20 +457,20 @@
                 android:id="@+id/settings_notifications"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="8dp"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?android:attr/selectableItemBackground">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
+                    android:alpha="0.8"
                     android:src="@drawable/ic_notifications_black_24dp"
-                    app:tint="@android:color/white"
-                    android:alpha="0.8"/>
+                    app:tint="@android:color/white" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -479,13 +478,13 @@
                     android:layout_weight="1"
                     android:text="Уведомления"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <Switch
                     android:id="@+id/notifications_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"/>
+                    android:checked="true" />
 
             </LinearLayout>
 
@@ -493,29 +492,29 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_marginVertical="8dp"
                 android:layout_marginHorizontal="8dp"
-                android:background="#30FFFFFF"/>
+                android:layout_marginVertical="8dp"
+                android:background="#30FFFFFF" />
 
             <!-- Пункт настроек 2 - Тема -->
             <LinearLayout
                 android:id="@+id/settings_theme"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="8dp"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?android:attr/selectableItemBackground">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
+                    android:alpha="0.8"
                     android:src="@drawable/ic_palette_black_24dp"
-                    app:tint="@android:color/white"
-                    android:alpha="0.8"/>
+                    app:tint="@android:color/white" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -523,13 +522,13 @@
                     android:layout_weight="1"
                     android:text="Темная тема"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_arrow_forward_black_24dp"
-                    app:tint="#A0B0FF"/>
+                    app:tint="#A0B0FF" />
 
             </LinearLayout>
 
@@ -537,32 +536,32 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_marginVertical="8dp"
                 android:layout_marginHorizontal="8dp"
-                android:background="#30FFFFFF"/>
+                android:layout_marginVertical="8dp"
+                android:background="#30FFFFFF" />
 
             <!-- Пункт настроек 3 - Язык -->
             <LinearLayout
                 android:id="@+id/settings_language"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="8dp"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?android:attr/selectableItemBackground">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp">
 
                 <!-- Используем эмодзи или существующую иконку -->
                 <TextView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
-                    android:text="🌐"
-                    android:textSize="20sp"
+                    android:alpha="0.8"
                     android:gravity="center"
+                    android:text="🌐"
                     android:textColor="@android:color/white"
-                    android:alpha="0.8"/>
+                    android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -570,13 +569,13 @@
                     android:layout_weight="1"
                     android:text="Язык"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_arrow_forward_black_24dp"
-                    app:tint="#A0B0FF"/>
+                    app:tint="#A0B0FF" />
 
             </LinearLayout>
 
@@ -584,32 +583,32 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_marginVertical="8dp"
                 android:layout_marginHorizontal="8dp"
-                android:background="#30FFFFFF"/>
+                android:layout_marginVertical="8dp"
+                android:background="#30FFFFFF" />
 
             <!-- Пункт настроек 4 - Конфиденциальность -->
             <LinearLayout
                 android:id="@+id/settings_privacy"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="8dp"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?android:attr/selectableItemBackground">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp">
 
                 <!-- Используем эмодзи или существующую иконку -->
                 <TextView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
-                    android:text="🔒"
-                    android:textSize="20sp"
+                    android:alpha="0.8"
                     android:gravity="center"
+                    android:text="🔒"
                     android:textColor="@android:color/white"
-                    android:alpha="0.8"/>
+                    android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -617,13 +616,13 @@
                     android:layout_weight="1"
                     android:text="Конфиденциальность"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_arrow_forward_black_24dp"
-                    app:tint="#A0B0FF"/>
+                    app:tint="#A0B0FF" />
 
             </LinearLayout>
 

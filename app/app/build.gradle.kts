@@ -60,6 +60,10 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.activity)
 
+    implementation("com.airbnb.android:lottie:6.1.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+
     // Firebase Authentication (ОБНОВЛЕНО)
     implementation("com.google.firebase:firebase-auth")
     // Дополнительная зависимость для Kotlin-корутин (НОВОЕ)

@@ -1,18 +1,23 @@
 package com.horclotapp.taska
 
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.ServerTimestamp
+
 data class Task(
     val id: String = "",
     val title: String = "",
     val description: String = "",
     val dayOfWeek: String = "",
-    val isCompleted: Boolean = false,
     val isRecurring: Boolean = false,
-    val createdAt: Long = 0L,
+    val isCompleted: Boolean = false,
     val userId: String = "",
-    val priority: Int = 1
+    val createdAt: Long = 0,
+    val priority: Int = 1,
+    @ServerTimestamp
+    val dueDate: Timestamp? = null
 ) {
-    // Копирование с новым ID
-    fun copy(id: String = this.id): Task {
-        return Task(id, title, description, dayOfWeek, isCompleted, isRecurring, createdAt, userId, priority)
+    // Конструктор копирования с ID
+    fun copyWithId(id: String): Task {
+        return this.copy(id = id)
     }
 }

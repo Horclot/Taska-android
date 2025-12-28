@@ -34,4 +34,23 @@
     <style name="Theme.Taska.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
     <style name="Theme.Taska.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
+
+    <style name="NeonDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/dialog_background_neon</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <!-- Стиль для табов -->
+    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">13sp</item>
+        <item name="fontFamily">@font/poppins_medium</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+
+    <!-- Стиль для Snackbar -->
+    <style name="NeonSnackbar" parent="@style/Widget.MaterialComponents.Snackbar">
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:layout_gravity">top|center_horizontal</item>
+    </style>
 </resources>

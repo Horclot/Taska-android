@@ -34,4 +34,8 @@
     <style name="Theme.Taska.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
     <style name="Theme.Taska.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
+
+    <!-- Стиль для табов -->
+
+    <!-- Стиль для Snackbar -->
 </resources>
