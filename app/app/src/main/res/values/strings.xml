@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">Taska</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
     <string name="default_web_client_id">210872340764-0db0d95k51jrb1bjqpr668k9k722ns82.apps.googleusercontent.com</string>
 
     <string name="title_spaces">Пространства</string>
@@ -11,18 +8,6 @@
     <string name="title_profile">Профиль</string>
 
     <!-- Новые строки для FocusFragment -->
-    <string name="today">Сегодня</string>
-    <string name="tomorrow">Завтра</string>
-    <string name="daily_tasks">Ежедневные задачи</string>
-    <string name="add_task">+ Добавить задачу</string>
-    <string name="add_daily_task">+ Добавить ежедневную задачу</string>
-    <string name="no_tasks_today">Нет задач на сегодня</string>
-    <string name="no_tasks_tomorrow">Нет задач на завтра</string>
-    <string name="no_daily_tasks">Нет ежедневных задач</string>
-    <string name="delete_task">Удалить задачу</string>
-    <string name="delete_confirmation">Вы уверены, что хотите удалить эту задачу?</string>
-    <string name="delete">Удалить</string>
-    <string name="cancel">Отмена</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
