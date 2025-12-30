@@ -2,10 +2,13 @@ package com.horclotapp.taska
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -19,31 +22,51 @@ import kotlin.math.roundToInt
 
 class FocusFragment : Fragment() {
 
+    companion object {
+        private val daysOfWeekShort = listOf(
+            "ВС", "ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"
+        )
+
+        private val daysOfWeekFull = listOf(
+            "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"
+        )
+    }
+
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private lateinit var currentUserId: String
 
     // UI элементы
     private lateinit var loadingProgress: ProgressBar
-    private lateinit var tasksContainer: LinearLayout
+    private lateinit var dateContainer: LinearLayout
+    private lateinit var timelineContainer: LinearLayout
+    private lateinit var timelineLine: View
     private lateinit var fabAddTask: com.google.android.material.floatingactionbutton.FloatingActionButton
-    private lateinit var currentDate: TextView
-    private lateinit var todayTasksCount: TextView
-    private lateinit var totalTasksCount: TextView
-    private lateinit var completedPercent: TextView
+
+    // Дата и задачи
+    private var selectedDate: Calendar = Calendar.getInstance()
+    private val dates = mutableListOf<Calendar>()
+    private val dateViews = mutableListOf<View>()
 
     // Слушатель Firestore
     private var tasksListener: ListenerRegistration? = null
-    private var userListener: ListenerRegistration? = null
 
     // Аниматоры
     private val floatingAnimators = mutableListOf<ValueAnimator>()
 
-    companion object {
-        private val daysOfWeek = listOf(
-            "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"
-        )
-    }
+    // Иконки для приоритетов
+    private val priorityIcons = mapOf(
+        1 to R.drawable.ic_low_priority,
+        2 to R.drawable.ic_medium_priority,
+        3 to R.drawable.ic_high_priority
+    )
+
+    // Цвета для приоритетов
+    private val priorityColors = mapOf(
+        1 to "#4CAF50", // зеленый
+        2 to "#FF9800", // оранжевый
+        3 to "#F44336"  // красный
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,77 +78,136 @@ class FocusFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Инициализация Firebase
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         currentUserId = auth.currentUser?.uid ?: ""
 
-        // Инициализация UI
         initViews(view)
-        setupAnimations()
+        setupInfiniteDateSelector()
+        loadTasksForDate(selectedDate)
         setupClickListeners()
-        updateDateLabel()
-
-        // Загружаем задачи
-        loadTasks()
     }
 
     private fun initViews(view: View) {
         loadingProgress = view.findViewById(R.id.loadingProgress)
-        tasksContainer = view.findViewById(R.id.tasksContainer)
+        dateContainer = view.findViewById(R.id.dateContainer)
+        timelineContainer = view.findViewById(R.id.timelineContainer)
+        timelineLine = view.findViewById(R.id.timelineLine)
         fabAddTask = view.findViewById(R.id.fabAddTask)
-        currentDate = view.findViewById(R.id.currentDate)
-        todayTasksCount = view.findViewById(R.id.todayTasksCount)
-        totalTasksCount = view.findViewById(R.id.totalTasksCount)
-        completedPercent = view.findViewById(R.id.completedPercent)
     }
 
-    private fun setupAnimations() {
-        // Анимация неоновых эффектов
-        startFloatingAnimations()
+    private fun setupInfiniteDateSelector() {
+        val today = Calendar.getInstance()
 
-        // Анимация FAB
-        fabAddTask.scaleX = 0f
-        fabAddTask.scaleY = 0f
-        fabAddTask.animate()
-            .scaleX(1f)
-            .scaleY(1f)
-            .setDuration(500)
-            .setStartDelay(300)
-            .start()
-    }
+        // Создаем 30 дней назад и 30 дней вперед (можно увеличить для бесконечности)
+        for (i in -30..30) {
+            val date = Calendar.getInstance()
+            date.add(Calendar.DAY_OF_YEAR, i)
+            dates.add(date)
+        }
 
-    private fun startFloatingAnimations() {
-        // Пульсация неоновых эффектов
-        val neonGlow1 = requireView().findViewById<View>(R.id.neonGlow1)
-        val neonAnimator1 = ObjectAnimator.ofFloat(neonGlow1, "alpha", 0.15f, 0.25f)
-        neonAnimator1.duration = 1500
-        neonAnimator1.repeatCount = ValueAnimator.INFINITE
-        neonAnimator1.repeatMode = ValueAnimator.REVERSE
-        neonAnimator1.interpolator = AccelerateDecelerateInterpolator()
-        neonAnimator1.start()
-        floatingAnimators.add(neonAnimator1)
-    }
+        // Находим индекс сегодняшней даты
+        val todayIndex = dates.indexOfFirst {
+            isSameDay(it, Calendar.getInstance())
+        }
 
-    private fun setupClickListeners() {
-        fabAddTask.setOnClickListener {
-            showAddTaskDialog()
+        updateDateViews()
+        selectDate(todayIndex)
+
+        // Прокручиваем к сегодняшней дате
+        view?.post {
+            val dateScrollView = view?.findViewById<HorizontalScrollView>(R.id.dateScrollView)
+            val selectedView = if (todayIndex < dateViews.size) dateViews[todayIndex] else null
+            selectedView?.let {
+                dateScrollView?.scrollTo(it.left - 100, 0) // Прокрутка с небольшим отступом
+            }
         }
     }
 
-    private fun updateDateLabel() {
-        val dateFormat = SimpleDateFormat("EEEE, d MMMM yyyy", Locale("ru"))
-        val today = Calendar.getInstance()
-        currentDate.text = dateFormat.format(today.time)
+    private fun updateDateViews() {
+        dateContainer.removeAllViews()
+        dateViews.clear()
+
+        dates.forEachIndexed { index, date ->
+            val dateView = LayoutInflater.from(requireContext())
+                .inflate(R.layout.item_date, dateContainer, false)
+
+            val dayName = dateView.findViewById<TextView>(R.id.dayName)
+            val indicator = dateView.findViewById<View>(R.id.selectionIndicator)
+
+            // Устанавливаем короткое название дня недели
+            val dayOfWeekIndex = date.get(Calendar.DAY_OF_WEEK) - 1 // Calendar.SUNDAY = 1
+            val dayNameText = daysOfWeekShort[dayOfWeekIndex]
+            dayName.text = dayNameText
+
+            // Проверяем, сегодня ли это
+            if (isSameDay(date, Calendar.getInstance())) {
+                dayName.setTextColor(Color.parseColor("#4CAF50")) // Зеленый цвет для сегодня
+            } else {
+                dayName.setTextColor(resources.getColor(android.R.color.darker_gray, null))
+            }
+
+            dateView.setOnClickListener {
+                selectDate(index)
+                selectedDate = date
+                loadTasksForDate(date)
+            }
+
+            dateContainer.addView(dateView)
+            dateViews.add(dateView)
+        }
     }
 
-    private fun loadTasks() {
+    private fun selectDate(index: Int) {
+        dateViews.forEachIndexed { i, view ->
+            val dayName = view.findViewById<TextView>(R.id.dayName)
+            val indicator = view.findViewById<View>(R.id.selectionIndicator)
+
+            if (i == index) {
+                // Выбранная дата
+                dayName.setTextColor(resources.getColor(android.R.color.white, null))
+                dayName.textSize = 16f
+                indicator.isVisible = true
+
+                // Анимация выбора
+                view.animate()
+                    .scaleX(1.1f)
+                    .scaleY(1.1f)
+                    .setDuration(200)
+                    .start()
+            } else {
+                // Не выбранная дата
+                if (isSameDay(dates[i], Calendar.getInstance())) {
+                    // Сегодняшний день - зеленый
+                    dayName.setTextColor(Color.parseColor("#4CAF50"))
+                } else {
+                    // Остальные дни - серые
+                    dayName.setTextColor(resources.getColor(android.R.color.darker_gray, null))
+                }
+                dayName.textSize = 14f
+                indicator.isVisible = false
+
+                view.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(200)
+                    .start()
+            }
+        }
+    }
+
+    private fun loadTasksForDate(date: Calendar) {
         if (currentUserId.isEmpty()) {
             Toast.makeText(requireContext(), "Пользователь не авторизован", Toast.LENGTH_SHORT).show()
             return
         }
 
         showLoading(true)
+
+        val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date.time)
+        val dayOfWeek = getDayName(date)
+
+        tasksListener?.remove()
 
         tasksListener = db.collection("tasks")
             .whereEqualTo("userId", currentUserId)
@@ -141,164 +223,178 @@ class FocusFragment : Fragment() {
                 snapshot?.documents?.forEach { document ->
                     val task = document.toObject(Task::class.java)
                     if (task != null) {
-                        // Используем конструктор копирования с ID
-                        tasks.add(task.copy(id = document.id))
+                        task.id = document.id
+                        // Если время не установлено, устанавливаем по умолчанию
+                        if (task.time.isEmpty()) {
+                            task.time = "00:00"
+                        }
+                        tasks.add(task)
                     }
                 }
 
-                // Обновляем UI с задачами
-                updateTaskViews(tasks)
-
-                // Обновляем статистику
-                updateStatistics(tasks)
-            }
-    }
-
-    private fun updateTaskViews(tasks: List<Task>) {
-        // Очищаем контейнер
-        tasksContainer.removeAllViews()
-
-        // Получаем сегодняшний день
-        val calendar = Calendar.getInstance()
-        val todayDayName = getDayName(calendar)
-
-        // Фильтруем задачи: сегодняшние + ежедневные
-        val todayTasks = tasks.filter {
-            (it.dayOfWeek == todayDayName && !it.isRecurring) ||
-                    (it.isRecurring)
-        }
-
-        // Добавляем задачи в UI
-        if (todayTasks.isEmpty()) {
-            addEmptyMessage()
-        } else {
-            for ((index, task) in todayTasks.withIndex()) {
-                val taskView = createTaskItemView(task)
-                tasksContainer.addView(taskView)
-
-                // Добавляем разделитель если не последняя задача
-                if (index < todayTasks.size - 1) {
-                    val divider = View(requireContext())
-                    divider.layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        1
-                    ).apply {
-                        setMargins(0, 8, 0, 8)
+                // Фильтруем задачи для выбранной даты
+                val filteredTasks = tasks.filter { task ->
+                    // Если задача повторяющаяся, показываем для любой даты
+                    if (task.isRecurring) {
+                        true
+                    } else {
+                        // Проверяем по дате или дню недели (для совместимости со старыми задачами)
+                        task.date == dateString || task.dayOfWeek == dayOfWeek
                     }
-                    divider.setBackgroundColor(resources.getColor(android.R.color.white))
-                    divider.alpha = 0.1f
-                    tasksContainer.addView(divider)
                 }
+
+                // Сортируем по времени
+                val sortedTasks = filteredTasks.sortedBy { task ->
+                    val timeParts = task.time.split(":")
+                    try {
+                        timeParts[0].toInt() * 60 + timeParts[1].toInt()
+                    } catch (e: Exception) {
+                        0
+                    }
+                }
+
+                updateTimeline(sortedTasks)
             }
-        }
     }
 
-    private fun createTaskItemView(task: Task): View {
+    private fun updateTimeline(tasks: List<Task>) {
+        // Очищаем временную ленту
+        timelineContainer.removeAllViews()
+
+        if (tasks.isEmpty()) {
+            addEmptyTimelineMessage()
+            return
+        }
+
+        // Показываем линию времени
+        timelineLine.visibility = View.VISIBLE
+
+        // Создаем контейнер для временной ленты
+        val timelineContent = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        // Добавляем задачи
+        tasks.forEachIndexed { index, task ->
+            val taskView = createTimelineTaskView(task, index)
+            timelineContent.addView(taskView)
+        }
+
+        timelineContainer.addView(timelineContent)
+
+        // Обновляем высоту линии в зависимости от количества задач
+        updateTimelineLineHeight(tasks.size)
+    }
+
+    private fun createTimelineTaskView(task: Task, index: Int): View {
         val view = LayoutInflater.from(requireContext())
-            .inflate(R.layout.item_task_modern, null)
+            .inflate(R.layout.item_timeline_task, null)
 
-        val title = view.findViewById<TextView>(R.id.taskTitle)
-        val description = view.findViewById<TextView>(R.id.taskDescription)
-        val checkbox = view.findViewById<CheckBox>(R.id.taskCheckbox)
-        val priorityIndicator = view.findViewById<View>(R.id.priorityIndicator)
-        val deleteBtn = view.findViewById<ImageView>(R.id.deleteBtn)
+        val timeTextView = view.findViewById<TextView>(R.id.timeTextView)
+        val iconCircle = view.findViewById<ImageView>(R.id.iconCircle)
+        val taskTitle = view.findViewById<TextView>(R.id.taskTitle)
+        val taskDescription = view.findViewById<TextView>(R.id.taskDescription)
+        val taskCheckbox = view.findViewById<CheckBox>(R.id.taskCheckbox)
+        val taskCard = view.findViewById<androidx.cardview.widget.CardView>(R.id.taskCard)
 
-        title.text = task.title
+        // Устанавливаем время
+        timeTextView.text = formatTime(task.time)
+
+        // Устанавливаем иконку и цвет по приоритету
+        val iconRes = priorityIcons[task.priority] ?: R.drawable.ic_default
+        val color = priorityColors[task.priority] ?: "#4CAF50"
+
+        iconCircle.setImageResource(iconRes)
+
+        // Создаем круглый фон с нужным цветом
+        val drawable = resources.getDrawable(R.drawable.bg_circle_blue, null).mutate()
+        drawable.setTint(android.graphics.Color.parseColor(color))
+        iconCircle.background = drawable
+
+        // Настраиваем цвет иконки
+        iconCircle.setColorFilter(android.graphics.Color.WHITE)
+
+        taskTitle.text = task.title
+
         if (task.description.isNotEmpty()) {
-            description.text = task.description
-            description.visibility = View.VISIBLE
-        } else {
-            description.visibility = View.GONE
+            taskDescription.text = task.description
+            taskDescription.isVisible = true
         }
 
-        checkbox.isChecked = task.isCompleted
-
-        // Цвет приоритета
-        when(task.priority) {
-            3 -> priorityIndicator.setBackgroundColor(requireContext().getColor(android.R.color.holo_red_light))
-            2 -> priorityIndicator.setBackgroundColor(requireContext().getColor(android.R.color.holo_orange_light))
-            else -> priorityIndicator.setBackgroundColor(requireContext().getColor(android.R.color.holo_green_light))
-        }
-
-        // Обработчик изменения статуса задачи
-        checkbox.setOnCheckedChangeListener { _, isChecked ->
+        taskCheckbox.isChecked = task.isCompleted
+        taskCheckbox.setOnCheckedChangeListener { _, isChecked ->
             updateTaskStatus(task.id, isChecked, task)
         }
 
-        // Обработчик удаления
-        deleteBtn.setOnClickListener {
-            deleteTask(task.id)
+        // Обработчик клика на карточку
+        taskCard.setOnClickListener {
+            showEditTaskDialog(task)
         }
 
-        // Обработчик клика для редактирования
-        view.setOnClickListener {
-            showEditTaskDialog(task)
+        // Длинный клик для удаления
+        taskCard.setOnLongClickListener {
+            deleteTask(task.id)
+            true
         }
 
         return view
     }
 
-    private fun addEmptyMessage() {
-        val emptyView = LayoutInflater.from(requireContext())
-            .inflate(R.layout.empty_tasks_state, tasksContainer, false)
-        tasksContainer.addView(emptyView)
-    }
+    private fun addEmptyTimelineMessage() {
+        // Скрываем линию времени
+        timelineLine.visibility = View.GONE
 
-    private fun updateStatistics(tasks: List<Task>) {
-        val calendar = Calendar.getInstance()
-        val todayDayName = getDayName(calendar)
-
-        val todayTasks = tasks.filter {
-            (it.dayOfWeek == todayDayName && !it.isRecurring) ||
-                    (it.isRecurring)
-        }
-
-        val completedTasks = tasks.count { it.isCompleted }
-        val totalTasks = tasks.size
-
-        todayTasksCount.text = todayTasks.size.toString()
-        totalTasksCount.text = totalTasks.toString()
-
-        val percent = if (totalTasks > 0) {
-            (completedTasks.toFloat() / totalTasks * 100).roundToInt()
-        } else {
-            0
-        }
-
-        completedPercent.text = "$percent%"
-
-        // Анимируем изменение чисел
-        animateCounter(todayTasksCount, todayTasks.size)
-        animateCounter(totalTasksCount, totalTasks)
-        animateCounter(completedPercent, percent, "$percent%")
-    }
-
-    private fun animateCounter(textView: TextView, targetValue: Int, prefix: String = "") {
-        val currentValue = textView.text.toString().toIntOrNull() ?: 0
-        val animator = ValueAnimator.ofInt(currentValue, targetValue)
-        animator.duration = 500
-        animator.addUpdateListener { animation ->
-            val value = animation.animatedValue as Int
-            textView.text = if (prefix.isNotEmpty()) "$prefix$value" else value.toString()
-        }
-        animator.start()
-    }
-
-    private fun loadUserStats() {
-        if (currentUserId.isEmpty()) return
-
-        userListener = db.collection("users")
-            .document(currentUserId)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) return@addSnapshotListener
-
-                snapshot?.let { document ->
-                    val user = document.toObject(User::class.java)
-                    user?.let {
-                        // Здесь можно обновить дополнительные статистики
-                    }
-                }
+        val emptyView = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 100, 0, 100)
             }
+
+            addView(TextView(requireContext()).apply {
+                text = "На этот день задач нет"
+                setTextColor(resources.getColor(android.R.color.white, null))
+                textSize = 18f
+                gravity = Gravity.CENTER
+                setPadding(0, 0, 0, 16)
+            })
+
+            addView(TextView(requireContext()).apply {
+                text = "Добавьте первую задачу!"
+                setTextColor(resources.getColor(android.R.color.darker_gray, null))
+                textSize = 14f
+                gravity = Gravity.CENTER
+            })
+        }
+
+        timelineContainer.addView(emptyView)
+    }
+
+    private fun updateTimelineLineHeight(taskCount: Int) {
+        if (taskCount == 0) return
+
+        // Рассчитываем высоту линии: (кол-во задач * высота одного элемента) + отступы
+        val density = resources.displayMetrics.density
+        val taskHeight = (120 * density).toInt() // 120dp в пиксели
+        val marginBetweenTasks = (32 * density).toInt() // 32dp в пиксели
+        val totalHeight = (taskCount * taskHeight) + ((taskCount - 1) * marginBetweenTasks)
+
+        val layoutParams = timelineLine.layoutParams
+        layoutParams.height = totalHeight
+        timelineLine.layoutParams = layoutParams
+    }
+
+    private fun setupClickListeners() {
+        fabAddTask.setOnClickListener {
+            showAddTaskDialog()
+        }
     }
 
     private fun showAddTaskDialog() {
@@ -307,18 +403,27 @@ class FocusFragment : Fragment() {
 
         val titleInput = dialogView.findViewById<EditText>(R.id.titleInput)
         val descriptionInput = dialogView.findViewById<EditText>(R.id.descriptionInput)
+        val timeInput = dialogView.findViewById<EditText>(R.id.timeInput)
         val daySpinner = dialogView.findViewById<Spinner>(R.id.daySpinner)
         val isRecurringSwitch = dialogView.findViewById<Switch>(R.id.isRecurringSwitch)
+        val priorityRadioGroup = dialogView.findViewById<RadioGroup>(R.id.priorityRadioGroup)
         val cancelBtn = dialogView.findViewById<Button>(R.id.cancelBtn)
         val saveBtn = dialogView.findViewById<Button>(R.id.saveBtn)
 
         // Настройка спиннера дней
-        val adapter = ArrayAdapter(
+        val dayAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
-            listOf("Сегодня", "Завтра") + daysOfWeek
+            listOf("Сегодня", "Завтра") + daysOfWeekFull
         )
-        daySpinner.adapter = adapter
+        daySpinner.adapter = dayAdapter
+
+        // Устанавливаем текущее время
+        val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+        timeInput.setText(currentTime)
+
+        // Устанавливаем средний приоритет по умолчанию
+        priorityRadioGroup.check(R.id.priorityMedium)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Новая задача")
@@ -336,22 +441,36 @@ class FocusFragment : Fragment() {
             }
 
             val description = descriptionInput.text.toString().trim()
+            val time = timeInput.text.toString().trim()
             val isRecurring = isRecurringSwitch.isChecked
             val selectedDay = when(val selected = daySpinner.selectedItemPosition) {
                 0 -> "Сегодня"
                 1 -> "Завтра"
-                else -> daysOfWeek[selected - 2]
+                else -> daysOfWeekFull[selected - 2]
             }
 
-            saveTask(title, description, selectedDay, isRecurring)
-            animateTaskAdded()
+            // Получаем выбранный приоритет
+            val priority = when(priorityRadioGroup.checkedRadioButtonId) {
+                R.id.priorityLow -> 1
+                R.id.priorityHigh -> 3
+                else -> 2 // средний по умолчанию
+            }
+
+            if (!isValidTime(time)) {
+                timeInput.error = "Введите время в формате HH:mm"
+                timeInput.requestFocus()
+                return@setOnClickListener
+            }
+
+            saveTask(title, description, time, selectedDay, isRecurring, priority)
             dialog.dismiss()
         }
 
         dialog.show()
     }
 
-    private fun saveTask(title: String, description: String, day: String, isRecurring: Boolean) {
+    private fun saveTask(title: String, description: String, time: String,
+                         day: String, isRecurring: Boolean, priority: Int) {
         if (currentUserId.isEmpty()) return
 
         // Преобразуем "Сегодня" и "Завтра" в конкретные дни
@@ -365,15 +484,19 @@ class FocusFragment : Fragment() {
             else -> day
         }
 
+        val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(selectedDate.time)
+
         val task = hashMapOf(
             "title" to title,
             "description" to description,
             "dayOfWeek" to actualDay,
+            "date" to dateString,
+            "time" to time,
             "isRecurring" to isRecurring,
             "isCompleted" to false,
             "userId" to currentUserId,
             "createdAt" to System.currentTimeMillis(),
-            "priority" to 1
+            "priority" to priority // Используем выбранный приоритет
         )
 
         db.collection("tasks")
@@ -381,9 +504,101 @@ class FocusFragment : Fragment() {
             .addOnSuccessListener {
                 Toast.makeText(requireContext(), "Задача добавлена ✨", Toast.LENGTH_SHORT).show()
                 updateUserTaskStats(incrementCreated = true)
+                animateTaskAdded()
+                // Перезагружаем задачи для текущей даты
+                loadTasksForDate(selectedDate)
             }
             .addOnFailureListener { e ->
                 Toast.makeText(requireContext(), "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun showEditTaskDialog(task: Task) {
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_add_task_modern, null)
+
+        val titleInput = dialogView.findViewById<EditText>(R.id.titleInput)
+        val descriptionInput = dialogView.findViewById<EditText>(R.id.descriptionInput)
+        val timeInput = dialogView.findViewById<EditText>(R.id.timeInput)
+        val isRecurringSwitch = dialogView.findViewById<Switch>(R.id.isRecurringSwitch)
+        val priorityRadioGroup = dialogView.findViewById<RadioGroup>(R.id.priorityRadioGroup)
+        val cancelBtn = dialogView.findViewById<Button>(R.id.cancelBtn)
+        val saveBtn = dialogView.findViewById<Button>(R.id.saveBtn)
+
+        titleInput.setText(task.title)
+        descriptionInput.setText(task.description)
+        timeInput.setText(task.time)
+        isRecurringSwitch.isChecked = task.isRecurring
+
+        // Устанавливаем приоритет задачи
+        when(task.priority) {
+            1 -> priorityRadioGroup.check(R.id.priorityLow)
+            3 -> priorityRadioGroup.check(R.id.priorityHigh)
+            else -> priorityRadioGroup.check(R.id.priorityMedium)
+        }
+
+        // Скрываем daySpinner, так как день задачи менять не будем
+        val daySpinner = dialogView.findViewById<Spinner>(R.id.daySpinner)
+        daySpinner.visibility = View.GONE
+
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Редактировать задачу")
+            .setView(dialogView)
+            .create()
+
+        cancelBtn.setOnClickListener { dialog.dismiss() }
+
+        saveBtn.setOnClickListener {
+            val title = titleInput.text.toString().trim()
+            if (title.isEmpty()) {
+                titleInput.error = "Введите название"
+                return@setOnClickListener
+            }
+
+            val description = descriptionInput.text.toString().trim()
+            val time = timeInput.text.toString().trim()
+            val isRecurring = isRecurringSwitch.isChecked
+
+            // Получаем выбранный приоритет
+            val priority = when(priorityRadioGroup.checkedRadioButtonId) {
+                R.id.priorityLow -> 1
+                R.id.priorityHigh -> 3
+                else -> 2 // средний по умолчанию
+            }
+
+            if (!isValidTime(time)) {
+                timeInput.error = "Введите время в формате HH:mm"
+                timeInput.requestFocus()
+                return@setOnClickListener
+            }
+
+            updateTask(task.id, title, description, time, isRecurring, priority)
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun updateTask(taskId: String, title: String, description: String,
+                           time: String, isRecurring: Boolean, priority: Int) {
+        val updates = hashMapOf<String, Any>(
+            "title" to title,
+            "description" to description,
+            "time" to time,
+            "isRecurring" to isRecurring,
+            "priority" to priority
+        )
+
+        db.collection("tasks")
+            .document(taskId)
+            .update(updates)
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Задача обновлена", Toast.LENGTH_SHORT).show()
+                // Перезагружаем задачи для текущей даты
+                loadTasksForDate(selectedDate)
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "Ошибка обновления", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -397,6 +612,8 @@ class FocusFragment : Fragment() {
                     .delete()
                     .addOnSuccessListener {
                         Toast.makeText(requireContext(), "Задача удалена", Toast.LENGTH_SHORT).show()
+                        // Перезагружаем задачи для текущей даты
+                        loadTasksForDate(selectedDate)
                     }
                     .addOnFailureListener { e ->
                         Toast.makeText(requireContext(), "Ошибка удаления: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -405,21 +622,6 @@ class FocusFragment : Fragment() {
             }
             .setNegativeButton("Отмена", null)
             .show()
-    }
-
-    private fun animateTaskAdded() {
-        fabAddTask.animate()
-            .scaleX(1.2f)
-            .scaleY(1.2f)
-            .setDuration(200)
-            .withEndAction {
-                fabAddTask.animate()
-                    .scaleX(1f)
-                    .scaleY(1f)
-                    .setDuration(200)
-                    .start()
-            }
-            .start()
     }
 
     private fun updateTaskStatus(taskId: String, isCompleted: Boolean, task: Task) {
@@ -431,6 +633,8 @@ class FocusFragment : Fragment() {
                     updateUserTaskStats(incrementCompleted = true)
                     showConfettiAnimation()
                 }
+                // Обновляем UI задачи (например, меняем цвет или иконку)
+                loadTasksForDate(selectedDate)
             }
             .addOnFailureListener { e ->
                 Toast.makeText(requireContext(), "Ошибка обновления", Toast.LENGTH_SHORT).show()
@@ -438,7 +642,7 @@ class FocusFragment : Fragment() {
     }
 
     private fun showConfettiAnimation() {
-        // Простая анимация без Lottie
+        // Простая анимация
         val confettiView = TextView(requireContext())
         confettiView.text = "🎉"
         confettiView.textSize = 48f
@@ -461,10 +665,24 @@ class FocusFragment : Fragment() {
             .start()
     }
 
+    private fun animateTaskAdded() {
+        fabAddTask.animate()
+            .scaleX(1.2f)
+            .scaleY(1.2f)
+            .setDuration(200)
+            .withEndAction {
+                fabAddTask.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(200)
+                    .start()
+            }
+            .start()
+    }
+
     private fun updateUserTaskStats(
         incrementCompleted: Boolean = false,
-        incrementCreated: Boolean = false,
-        decrementTotal: Boolean = false
+        incrementCreated: Boolean = false
     ) {
         val updates = hashMapOf<String, Any>()
 
@@ -476,109 +694,24 @@ class FocusFragment : Fragment() {
             updates["totalTasksCreated"] = FieldValue.increment(1)
         }
 
-        if (decrementTotal) {
-            updates["totalTasksCreated"] = FieldValue.increment(-1)
-        }
-
         if (updates.isNotEmpty()) {
             db.collection("users")
                 .document(currentUserId)
                 .update(updates)
                 .addOnFailureListener { e ->
-                    println("Ошибка обновления статистики задач: ${e.message}")
+                    println("Ошибка обновления статистики: ${e.message}")
                 }
         }
     }
 
-    private fun showEditTaskDialog(task: Task) {
-        val dialogView = LayoutInflater.from(requireContext())
-            .inflate(R.layout.dialog_add_task_modern, null)
-
-        val titleInput = dialogView.findViewById<EditText>(R.id.titleInput)
-        val descriptionInput = dialogView.findViewById<EditText>(R.id.descriptionInput)
-        val daySpinner = dialogView.findViewById<Spinner>(R.id.daySpinner)
-        val isRecurringSwitch = dialogView.findViewById<Switch>(R.id.isRecurringSwitch)
-        val cancelBtn = dialogView.findViewById<Button>(R.id.cancelBtn)
-        val saveBtn = dialogView.findViewById<Button>(R.id.saveBtn)
-
-        titleInput.setText(task.title)
-        descriptionInput.setText(task.description)
-        isRecurringSwitch.isChecked = task.isRecurring
-
-        val adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            listOf("Сегодня", "Завтра") + daysOfWeek
-        )
-        daySpinner.adapter = adapter
-
-        // Устанавливаем выбранный день
-        val dayIndex = daysOfWeek.indexOf(task.dayOfWeek)
-        if (dayIndex != -1) {
-            daySpinner.setSelection(dayIndex + 2)
-        }
-
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Редактировать задачу")
-            .setView(dialogView)
-            .create()
-
-        cancelBtn.setOnClickListener { dialog.dismiss() }
-
-        saveBtn.setOnClickListener {
-            val title = titleInput.text.toString().trim()
-            if (title.isEmpty()) {
-                titleInput.error = "Введите название"
-                return@setOnClickListener
-            }
-
-            val description = descriptionInput.text.toString().trim()
-            val isRecurring = isRecurringSwitch.isChecked
-            val selectedDay = when(val selected = daySpinner.selectedItemPosition) {
-                0 -> "Сегодня"
-                1 -> "Завтра"
-                else -> daysOfWeek[selected - 2]
-            }
-
-            updateTask(task.id, title, description, selectedDay, isRecurring)
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
-
-    private fun updateTask(taskId: String, title: String, description: String, day: String, isRecurring: Boolean) {
-        val actualDay = when(day) {
-            "Сегодня" -> getDayName(Calendar.getInstance())
-            "Завтра" -> {
-                val calendar = Calendar.getInstance()
-                calendar.add(Calendar.DAY_OF_YEAR, 1)
-                getDayName(calendar)
-            }
-            else -> day
-        }
-
-        val updates = hashMapOf<String, Any>(
-            "title" to title,
-            "description" to description,
-            "dayOfWeek" to actualDay,
-            "isRecurring" to isRecurring
-        )
-
-        db.collection("tasks")
-            .document(taskId)
-            .update(updates)
-            .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Задача обновлена", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(requireContext(), "Ошибка обновления", Toast.LENGTH_SHORT).show()
-            }
+    // Вспомогательные функции
+    private fun isSameDay(cal1: Calendar, cal2: Calendar): Boolean {
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
     }
 
     private fun getDayName(calendar: Calendar): String {
-        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-        return when(dayOfWeek) {
+        return when(calendar.get(Calendar.DAY_OF_WEEK)) {
             Calendar.MONDAY -> "Понедельник"
             Calendar.TUESDAY -> "Вторник"
             Calendar.WEDNESDAY -> "Среда"
@@ -590,6 +723,33 @@ class FocusFragment : Fragment() {
         }
     }
 
+    private fun formatTime(time: String): String {
+        return try {
+            val parts = time.split(":")
+            if (parts.size == 2) {
+                "${parts[0]}:${parts[1]}"
+            } else {
+                "00:00"
+            }
+        } catch (e: Exception) {
+            "00:00"
+        }
+    }
+
+    private fun isValidTime(time: String): Boolean {
+        return try {
+            val parts = time.split(":")
+            if (parts.size != 2) return false
+
+            val hours = parts[0].toInt()
+            val minutes = parts[1].toInt()
+
+            hours in 0..23 && minutes in 0..59
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     private fun showLoading(show: Boolean) {
         loadingProgress.isVisible = show
     }
@@ -597,7 +757,6 @@ class FocusFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         tasksListener?.remove()
-        userListener?.remove()
         floatingAnimators.forEach { it.cancel() }
         floatingAnimators.clear()
     }

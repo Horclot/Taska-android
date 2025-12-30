@@ -2,199 +2,71 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_gradient_future">
+    android:background="#0F1115">
 
-    <!-- Простой градиентный фон вместо Lottie -->
-    <View
+    <HorizontalScrollView
+        android:id="@+id/dateScrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background_gradient_future"/>
+        android:layout_height="wrap_content"
+        android:background="#1C1F26"
+        android:elevation="4dp"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-    <!-- Неоновые эффекты -->
-    <View
-        android:id="@+id/neonGlow1"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_gravity="top|end"
-        android:layout_marginTop="-100dp"
-        android:layout_marginEnd="-100dp"
-        android:background="@drawable/neon_glow_effect"
-        android:alpha="0.2"/>
+        <LinearLayout
+            android:id="@+id/dateContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="12dp">
+            <!-- Дни будут добавляться динамически -->
+        </LinearLayout>
+    </HorizontalScrollView>
 
-    <View
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_gravity="bottom|start"
-        android:layout_marginBottom="-50dp"
-        android:layout_marginStart="-50dp"
-        android:background="@drawable/neon_glow_effect"
-        android:alpha="0.15"/>
-
+    <!-- Временная лента с задачами -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never">
+        android:layout_marginTop="70dp"
+        android:overScrollMode="never"
+        android:padding="16dp">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:paddingTop="32dp">
+            android:background="#1C1F26"
+            android:clipToPadding="false"
+            android:elevation="6dp"
+            android:padding="16dp">
 
-            <!-- Заголовок с датой -->
-            <LinearLayout
+            <!-- Контейнер для временной ленты -->
+            <RelativeLayout
+                android:id="@+id/timelineWrapper"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="20dp">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <!-- Вертикальная линия ленты - теперь в начале контейнера -->
+                <View
+                    android:id="@+id/timelineLine"
+                    android:layout_width="2dp"
                     android:layout_height="wrap_content"
-                    android:text="Фокус План"
-                    android:textColor="@android:color/white"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="-0.02"/>
+                    android:layout_marginLeft="65dp"
+                    android:background="#2A2E38" />
 
-                <TextView
-                    android:id="@+id/currentDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Сегодня, 15 марта 2026"
-                    android:textColor="#A0FFB0"
-                    android:textSize="14sp"
-                    android:alpha="0.9"/>
-
-            </LinearLayout>
-
-            <!-- Карточка статистики -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="6dp"
-                app:cardBackgroundColor="#206677FF">
-
+                <!-- Контейнер для задач -->
                 <LinearLayout
+                    android:id="@+id/timelineContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="20dp">
+                    android:orientation="vertical"
+                    android:paddingLeft="-13dp"
+                    android:paddingRight="16dp" />
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
+            </RelativeLayout>
 
-                        <TextView
-                            android:id="@+id/todayTasksCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textColor="@android:color/white"
-                            android:textSize="24sp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Сегодня"
-                            android:textColor="#A0FFB0"
-                            android:textSize="12sp"
-                            android:alpha="0.9"/>
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="30dp"
-                        android:background="#30FFFFFF"
-                        android:layout_marginHorizontal="8dp"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
-
-                        <TextView
-                            android:id="@+id/totalTasksCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textColor="@android:color/white"
-                            android:textSize="24sp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Всего"
-                            android:textColor="#A0FFB0"
-                            android:textSize="12sp"
-                            android:alpha="0.9"/>
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="30dp"
-                        android:background="#30FFFFFF"
-                        android:layout_marginHorizontal="8dp"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
-
-                        <TextView
-                            android:id="@+id/completedPercent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=""
-                            android:textColor="#FFD166"
-                            android:textSize="24sp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Выполнено"
-                            android:textColor="#A0FFB0"
-                            android:textSize="12sp"
-                            android:alpha="0.9"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Контейнер для задач -->
-            <LinearLayout
-                android:id="@+id/tasksContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <!-- Карточки задач будут добавляться динамически -->
-
-            </LinearLayout>
-
-        </LinearLayout>
+        </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 
     <!-- Кнопка добавления -->
@@ -206,9 +78,9 @@
         android:layout_margin="24dp"
         android:src="@drawable/ic_add_neon"
         app:backgroundTint="#FF6B6B"
-        app:tint="@android:color/white"
         app:elevation="8dp"
-        app:rippleColor="#FF8E8E"/>
+        app:tint="@android:color/white"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <!-- Прогресс бар -->
     <ProgressBar
