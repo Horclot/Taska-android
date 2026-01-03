@@ -110,7 +110,6 @@
 
     <!-- Декоративные элементы -->
     <View
-        android:id="@+id/decorativeCircle1"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="32dp"
@@ -121,7 +120,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
-        android:id="@+id/decorativeCircle2"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginEnd="24dp"

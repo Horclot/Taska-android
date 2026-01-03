@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0F1115">
+
+    <HorizontalScrollView
+        android:id="@+id/dateScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1C1F26"
+        android:elevation="4dp"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:id="@+id/dateContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="12dp">
+            <!-- Дни будут добавляться динамически -->
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Временная лента с задачами -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
+        android:overScrollMode="never"
+        android:padding="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#1C1F26"
+            android:clipToPadding="false"
+            android:elevation="6dp"
+            android:padding="16dp">
+
+            <!-- Контейнер для временной ленты -->
+            <RelativeLayout
+                android:id="@+id/timelineWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Вертикальная линия ленты - теперь в начале контейнера -->
+                <View
+                    android:id="@+id/timelineLine"
+                    android:layout_width="2dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="65dp"
+                    android:background="#2A2E38" />
+
+                <!-- Контейнер для задач -->
+                <LinearLayout
+                    android:id="@+id/timelineContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="-13dp"
+                    android:paddingRight="16dp" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Кнопка добавления -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="24dp"
+        android:src="@drawable/ic_add_neon"
+        app:backgroundTint="#FF6B6B"
+        app:elevation="8dp"
+        app:tint="@android:color/white"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <!-- Прогресс бар -->
+    <ProgressBar
+        android:id="@+id/loadingProgress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:indeterminateTint="#FF6B6B"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

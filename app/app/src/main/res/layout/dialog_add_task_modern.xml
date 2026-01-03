@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/titleInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Название задачи"
+        android:textColorHint="#A0B0FF"
+        android:layout_marginBottom="12dp"
+        android:textColor="@android:color/white"/>
+
+    <EditText
+        android:id="@+id/descriptionInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Описание (необязательно)"
+        android:textColorHint="#A0B0FF"
+        android:layout_marginBottom="12dp"
+        android:textColor="@android:color/white"/>
+
+    <!-- Выбор приоритета -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Приоритет:"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:layout_marginEnd="12dp"/>
+
+        <RadioGroup
+            android:id="@+id/priorityRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/priorityLow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Низкий"
+                android:buttonTint="#4CAF50"
+                android:textColor="@android:color/white"/>
+
+            <RadioButton
+                android:id="@+id/priorityMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Средний"
+                android:buttonTint="#FF9800"
+                android:checked="true"
+                android:textColor="@android:color/white"/>
+
+            <RadioButton
+                android:id="@+id/priorityHigh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Высокий"
+                android:buttonTint="#F44336"
+                android:textColor="@android:color/white"/>
+
+        </RadioGroup>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/timeInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Время (HH:mm)"
+        android:textColorHint="#A0B0FF"
+        android:layout_marginBottom="12dp"
+        android:inputType="time"
+        android:text="00:00"
+        android:textColor="@android:color/white"/>
+
+    <Spinner
+        android:id="@+id/daySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="#A0B0FF"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ежедневная задача"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"/>
+
+        <Switch
+            android:id="@+id/isRecurringSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cancelBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Отмена"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="#6666"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/saveBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Сохранить"
+            android:backgroundTint="#FF6B6B"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+</LinearLayout>
