@@ -8,4 +8,23 @@
     <color name="light_purple">#8A6BFF</color>
     <color name="accent_blue">#A0B0FF</color>
     <color name="button_gradient_start">#6C4BDF</color>
+
+    <!-- Backgrounds -->
+    <color name="bg_main">#0F1115</color>
+    <color name="bg_card">#1C1F26</color>
+
+    <!-- Accent -->
+    <color name="accent_red">#FF6B6B</color>
+    <color name="accent_yellow">#FFC857</color>
+    <color name="accent_green">#4CAF50</color>
+
+    <!-- Text -->
+    <color name="text_primary">@android:color/white</color>
+    <color name="text_secondary">#9EA2B0</color>
+
+    <!-- Icons -->
+    <color name="icon_secondary">#9EA2B0</color>
+
+    <!-- Divider -->
+    <color name="divider">#2A2E38</color>
 </resources>
