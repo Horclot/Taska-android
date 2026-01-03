@@ -1,655 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_gradient"
     android:fillViewport="true"
-    android:fitsSystemWindows="false">
+    android:background="#0F1115">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="80dp">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <ProgressBar
-            android:id="@+id/loadingProgress"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Анимированный фон с пульсирующими кругами -->
-        <View
-            android:id="@+id/animatedBgCircle1"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_marginTop="-150dp"
-            android:layout_marginEnd="-100dp"
-            android:alpha="0.1"
-            android:background="@drawable/profile_circle_background"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/animatedBgCircle2"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_marginStart="-80dp"
-            android:layout_marginBottom="100dp"
-            android:alpha="0.15"
-            android:background="@drawable/profile_circle_background"
-            app:layout_constraintBottom_toTopOf="@id/profileCard"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <!-- Контейнер для всех плавающих частиц -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/particlesContainer"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Карточка профиля -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/profileCard"
+        <!-- PROFILE CARD -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="24dp"
-            android:layout_marginTop="80dp"
-            android:background="@drawable/profile_card_background"
-            android:padding="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <!-- Аватар с прогресс-кольцом -->
-            <FrameLayout
-                android:id="@+id/avatarContainer"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <!-- Прогресс-кольцо -->
-                <ProgressBar
-                    android:id="@+id/levelProgress"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:indeterminate="false"
-                    android:max="100"
-                    android:progress="75"
-                    android:progressDrawable="@drawable/progress_circle_background"
-                    android:visibility="gone"
-                    tools:visibility="gone" />
-
-                <!-- Аватар пользователя -->
-                <ImageView
-                    android:id="@+id/profileAvatar"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/profile_circle_background"
-                    android:contentDescription="Аватар профиля"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_profile_large" />
-
-                <!-- Бейдж уровня -->
-                <TextView
-                    android:id="@+id/levelBadge"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/profile_circle_background"
-                    android:gravity="center"
-                    android:text="12"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-            </FrameLayout>
-
-            <!-- Имя пользователя -->
-            <TextView
-                android:id="@+id/userName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Александр Новиков"
-                android:textColor="@android:color/white"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/avatarContainer" />
-
-            <!-- Email -->
-            <TextView
-                android:id="@+id/userEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:alpha="0.8"
-                android:text="alex@taska.com"
-                android:textColor="#A0B0FF"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/userName" />
-
-            <!-- Статистика в строку -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="-16dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="-16dp"
-                android:divider="@drawable/vertical_divider"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:showDividers="middle"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/userEmail">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/completedTasks"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="128"
-                        android:textColor="@android:color/white"
-                        android:textSize="28sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.8"
-                        android:text="Задач\nвыполненно"
-                        android:textAlignment="center"
-                        android:textColor="#A0B0FF"
-                        android:textSize="12sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/currentStreak"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="7"
-                        android:textColor="@android:color/white"
-                        android:textSize="28sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.8"
-                        android:text="Дней подряд"
-                        android:textAlignment="center"
-                        android:textColor="#A0B0FF"
-                        android:textSize="12sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/focusTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="42"
-                        android:textColor="@android:color/white"
-                        android:textSize="28sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.8"
-                        android:text="Пространств"
-                        android:textAlignment="center"
-                        android:textColor="#A0B0FF"
-                        android:textSize="12sp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <!-- Секция достижений -->
-        <TextView
-            android:id="@+id/achievementsTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="32dp"
-            android:text="Достижения"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profileCard" />
-
-        <HorizontalScrollView
-            android:id="@+id/achievementsScroll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fadingEdgeLength="32dp"
-            android:paddingHorizontal="24dp"
-            android:requiresFadingEdge="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/achievementsTitle">
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="#1C1F26"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingEnd="24dp">
-
-                <!-- Примеры достижений -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="80dp"
-                    android:layout_height="100dp"
-                    android:layout_marginEnd="16dp"
-                    app:cardBackgroundColor="#156677FF"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🔥"
-                            android:textSize="24sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="7 дней"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/white"
-                            android:textSize="10sp" />
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="80dp"
-                    android:layout_height="100dp"
-                    android:layout_marginEnd="16dp"
-                    app:cardBackgroundColor="#156677FF"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="⚡"
-                            android:textSize="24sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="100 задач"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/white"
-                            android:textSize="10sp" />
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="80dp"
-                    android:layout_height="100dp"
-                    android:layout_marginEnd="16dp"
-                    app:cardBackgroundColor="#156677FF"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🏆"
-                            android:textSize="24sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="Мастер"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/white"
-                            android:textSize="10sp" />
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="80dp"
-                    android:layout_height="100dp"
-                    android:layout_marginEnd="16dp"
-                    app:cardBackgroundColor="#156677FF"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🎯"
-                            android:textSize="24sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="Точность"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/white"
-                            android:textSize="10sp" />
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-            </LinearLayout>
-
-        </HorizontalScrollView>
-
-        <!-- Секция настроек -->
-        <TextView
-            android:id="@+id/settingsTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="32dp"
-            android:text="Настройки"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/achievementsScroll" />
-
-        <LinearLayout
-            android:id="@+id/settingsList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/profile_card_background"
-            android:orientation="vertical"
-            android:padding="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/settingsTitle">
-
-            <!-- Пункт настроек 1 - Уведомления -->
-            <LinearLayout
-                android:id="@+id/settings_notifications"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="8dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="24dp">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="16dp"
-                    android:alpha="0.8"
-                    android:src="@drawable/ic_notifications_black_24dp"
-                    app:tint="@android:color/white" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/profileAvatar"
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:padding="2dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_google"
+                    app:shapeAppearanceOverlay="@style/CircleImageView"
+                    app:strokeColor="#FF6B6B"
+                    app:strokeWidth="2dp"/>
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Уведомления"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
-
-                <Switch
-                    android:id="@+id/notifications_switch"
+                    android:id="@+id/profileName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true" />
-
-            </LinearLayout>
-
-            <!-- Разделитель -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginHorizontal="8dp"
-                android:layout_marginVertical="8dp"
-                android:background="#30FFFFFF" />
-
-            <!-- Пункт настроек 2 - Тема -->
-            <LinearLayout
-                android:id="@+id/settings_theme"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="8dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="16dp"
-                    android:alpha="0.8"
-                    android:src="@drawable/ic_palette_black_24dp"
-                    app:tint="@android:color/white" />
+                    android:layout_marginTop="12dp"
+                    android:text="Username"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:id="@+id/profileEmail"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Темная тема"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_arrow_forward_black_24dp"
-                    app:tint="#A0B0FF" />
-
+                    android:layout_marginTop="4dp"
+                    android:text="user@gmail.com"
+                    android:textColor="#9EA2B0"
+                    android:textSize="14sp"/>
             </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-            <!-- Разделитель -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginHorizontal="8dp"
-                android:layout_marginVertical="8dp"
-                android:background="#30FFFFFF" />
+        <!-- ACTIONS CARD -->
+        <!-- ACTIONS CARD -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/bg_card"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp">
 
-            <!-- Пункт настроек 3 - Язык -->
             <LinearLayout
-                android:id="@+id/settings_language"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="8dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <!-- Используем эмодзи или существующую иконку -->
-                <TextView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="16dp"
-                    android:alpha="0.8"
-                    android:gravity="center"
-                    android:text="🌐"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp" />
+                <!-- Language -->
+                <include
+                    android:id="@+id/actionLanguage"
+                    layout="@layout/item_profile_action"/>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Язык"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                <!-- Theme -->
+                <include
+                    android:id="@+id/actionTheme"
+                    layout="@layout/item_profile_action"/>
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_arrow_forward_black_24dp"
-                    app:tint="#A0B0FF" />
+                <!-- Notifications -->
+                <include
+                    android:id="@+id/actionNotifications"
+                    layout="@layout/item_profile_action"/>
+
+                <!-- Premium -->
+                <include
+                    android:id="@+id/actionPremium"
+                    layout="@layout/item_profile_action"/>
 
             </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-            <!-- Разделитель -->
-            <View
+
+        <!-- LOGOUT -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#1C1F26"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp">
+
+            <TextView
+                android:id="@+id/logout"
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginHorizontal="8dp"
-                android:layout_marginVertical="8dp"
-                android:background="#30FFFFFF" />
+                android:layout_height="wrap_content"
+                android:padding="18dp"
+                android:gravity="center"
+                android:text="Выйти из аккаунта"
+                android:textColor="#FF6B6B"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+        </com.google.android.material.card.MaterialCardView>
 
-            <!-- Пункт настроек 4 - Конфиденциальность -->
-            <LinearLayout
-                android:id="@+id/settings_privacy"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="8dp">
-
-                <!-- Используем эмодзи или существующую иконку -->
-                <TextView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="16dp"
-                    android:alpha="0.8"
-                    android:gravity="center"
-                    android:text="🔒"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Конфиденциальность"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_arrow_forward_black_24dp"
-                    app:tint="#A0B0FF" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- Кнопка выхода -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/logoutButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="56dp"
-            android:layout_margin="24dp"
-            android:layout_marginTop="32dp"
-            android:text="Выйти"
-            android:textColor="#FF6B6B"
-            android:textSize="16sp"
-            app:backgroundTint="#20FF6B6B"
-            app:cornerRadius="16dp"
-            app:icon="@drawable/ic_exit_to_app_black_24dp"
-            app:iconGravity="textStart"
-            app:iconTint="#FF6B6B"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/settingsList"
-            app:strokeColor="#30FF6B6B"
-            app:strokeWidth="1dp" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>

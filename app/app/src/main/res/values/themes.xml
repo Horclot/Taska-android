@@ -22,6 +22,11 @@
     <style name="Theme.Taska" parent="Base.Theme.Taska">
     </style>
 
+    <style name="CircleImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
     <!-- Тема для стартового экрана -->
     <style name="Theme.Taska.Splash" parent="Theme.Taska">
         <item name="android:windowFullscreen">false</item>
