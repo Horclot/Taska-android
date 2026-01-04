@@ -214,40 +214,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- SECURITY CARD -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/securityCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="#1C1F26"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="2dp"
-            app:cardMaxElevation="6dp"
-            android:foreground="?attr/selectableItemBackground">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <!-- Change Password -->
-                <include
-                    android:id="@+id/actionChangePassword"
-                    layout="@layout/item_profile_action"/>
-
-                <!-- Two-Factor Auth -->
-                <include
-                    android:id="@+id/actionTwoFactor"
-                    layout="@layout/item_profile_action"/>
-
-                <!-- Devices -->
-                <include
-                    android:id="@+id/actionDevices"
-                    layout="@layout/item_profile_action"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
         <!-- SUPPORT CARD -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/supportCard"

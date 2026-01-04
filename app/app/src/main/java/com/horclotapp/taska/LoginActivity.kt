@@ -144,6 +144,41 @@ class LoginActivity : AppCompatActivity() {
             "achievements" to emptyList<String>()
         )
 
+        val premiumData = hashMapOf<String, Any>(
+            "userId" to firebaseUser.uid,
+            "isPremium" to false,
+            "subscriptionType" to "free",
+            "createdAt" to System.currentTimeMillis(),
+            "updatedAt" to System.currentTimeMillis()
+        )
+
+        // Создаем настройки пользователя
+        val userSettings = hashMapOf<String, Any>(
+            "userId" to firebaseUser.uid,
+            "notificationsEnabled" to true,
+            "darkMode" to false,
+            "followSystemTheme" to true,
+            "language" to "ru",
+            "soundEffects" to true,
+            "createdAt" to System.currentTimeMillis(),
+            "updatedAt" to System.currentTimeMillis()
+        )
+
+        // Записываем в Firestore
+        firestore.collection("premium_subscriptions")
+            .document(firebaseUser.uid)
+            .set(premiumData, SetOptions.merge())
+            .addOnSuccessListener {
+                // Premium данные сохранены
+            }
+
+        firestore.collection("user_settings")
+            .document(firebaseUser.uid)
+            .set(userSettings, SetOptions.merge())
+            .addOnSuccessListener {
+                // Настройки сохранены
+            }
+
         // Используем merge, чтобы не перезаписывать существующие данные
         firestore.collection("users")
             .document(firebaseUser.uid)
