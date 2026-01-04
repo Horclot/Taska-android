@@ -2,6 +2,7 @@ package com.horclotapp.taska
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
@@ -51,9 +52,6 @@ class FocusFragment : Fragment() {
     // Слушатель Firestore
     private var tasksListener: ListenerRegistration? = null
 
-    // Аниматоры
-    private val floatingAnimators = mutableListOf<ValueAnimator>()
-
     // Иконки для приоритетов
     private val priorityIcons = mapOf(
         1 to R.drawable.ic_low_priority,
@@ -84,8 +82,9 @@ class FocusFragment : Fragment() {
 
         initViews(view)
         setupInfiniteDateSelector()
-        loadTasksForDate(selectedDate)
         setupClickListeners()
+        setupAnimations()
+        loadTasksForDate(selectedDate, animate = true)
     }
 
     private fun initViews(view: View) {
@@ -150,7 +149,7 @@ class FocusFragment : Fragment() {
             dateView.setOnClickListener {
                 selectDate(index)
                 selectedDate = date
-                loadTasksForDate(date)
+                loadTasksForDate(date, animate = true)
             }
 
             dateContainer.addView(dateView)
@@ -196,7 +195,7 @@ class FocusFragment : Fragment() {
         }
     }
 
-    private fun loadTasksForDate(date: Calendar) {
+    private fun loadTasksForDate(date: Calendar, animate: Boolean = false) {
         if (currentUserId.isEmpty()) {
             Toast.makeText(requireContext(), "Пользователь не авторизован", Toast.LENGTH_SHORT).show()
             return
@@ -253,11 +252,11 @@ class FocusFragment : Fragment() {
                     }
                 }
 
-                updateTimeline(sortedTasks)
+                updateTimeline(sortedTasks, animate)
             }
     }
 
-    private fun updateTimeline(tasks: List<Task>) {
+    private fun updateTimeline(tasks: List<Task>, animate: Boolean = false) {
         // Очищаем временную ленту
         timelineContainer.removeAllViews()
 
@@ -282,6 +281,11 @@ class FocusFragment : Fragment() {
         tasks.forEachIndexed { index, task ->
             val taskView = createTimelineTaskView(task, index)
             timelineContent.addView(taskView)
+
+            // Применяем анимацию если нужно
+            if (animate) {
+                animateTaskView(taskView, index)
+            }
         }
 
         timelineContainer.addView(timelineContent)
@@ -298,7 +302,6 @@ class FocusFragment : Fragment() {
         val iconCircle = view.findViewById<ImageView>(R.id.iconCircle)
         val taskTitle = view.findViewById<TextView>(R.id.taskTitle)
         val taskDescription = view.findViewById<TextView>(R.id.taskDescription)
-        val taskCheckbox = view.findViewById<CheckBox>(R.id.taskCheckbox)
         val taskCard = view.findViewById<androidx.cardview.widget.CardView>(R.id.taskCard)
 
         // Устанавливаем время
@@ -325,11 +328,6 @@ class FocusFragment : Fragment() {
             taskDescription.isVisible = true
         }
 
-        taskCheckbox.isChecked = task.isCompleted
-        taskCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            updateTaskStatus(task.id, isChecked, task)
-        }
-
         // Обработчик клика на карточку
         taskCard.setOnClickListener {
             showEditTaskDialog(task)
@@ -342,6 +340,20 @@ class FocusFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun animateTaskView(taskView: View, index: Int) {
+        // Начальные значения для анимации
+        taskView.alpha = 0f
+        taskView.translationY = 50f
+
+        // Запускаем анимацию с задержкой для каждого элемента
+        taskView.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .setDuration(300)
+            .setStartDelay((index * 100).toLong())
+            .start()
     }
 
     private fun addEmptyTimelineMessage() {
@@ -359,7 +371,7 @@ class FocusFragment : Fragment() {
             }
 
             addView(TextView(requireContext()).apply {
-                text = "На этот день задач нет"
+                text = "На этот день занятий нет"
                 setTextColor(resources.getColor(android.R.color.white, null))
                 textSize = 18f
                 gravity = Gravity.CENTER
@@ -367,12 +379,21 @@ class FocusFragment : Fragment() {
             })
 
             addView(TextView(requireContext()).apply {
-                text = "Добавьте первую задачу!"
+                text = "Добавьте первое занятие в график!"
                 setTextColor(resources.getColor(android.R.color.darker_gray, null))
                 textSize = 14f
                 gravity = Gravity.CENTER
             })
         }
+
+        // Анимация пустого состояния
+        emptyView.alpha = 0f
+        emptyView.translationY = 30f
+        emptyView.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .setDuration(400)
+            .start()
 
         timelineContainer.addView(emptyView)
     }
@@ -394,6 +415,30 @@ class FocusFragment : Fragment() {
     private fun setupClickListeners() {
         fabAddTask.setOnClickListener {
             showAddTaskDialog()
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupAnimations() {
+        // Анимация для кнопки добавления
+        fabAddTask.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    v.animate()
+                        .scaleX(0.9f)
+                        .scaleY(0.9f)
+                        .setDuration(100)
+                        .start()
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    v.animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setDuration(100)
+                        .start()
+                }
+            }
+            false
         }
     }
 
@@ -426,7 +471,7 @@ class FocusFragment : Fragment() {
         priorityRadioGroup.check(R.id.priorityMedium)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Новая задача")
+            .setTitle("Добавить занятие в график")
             .setView(dialogView)
             .create()
 
@@ -435,7 +480,7 @@ class FocusFragment : Fragment() {
         saveBtn.setOnClickListener {
             val title = titleInput.text.toString().trim()
             if (title.isEmpty()) {
-                titleInput.error = "Введите название"
+                titleInput.error = "Введите название занятия"
                 titleInput.requestFocus()
                 return@setOnClickListener
             }
@@ -496,17 +541,16 @@ class FocusFragment : Fragment() {
             "isCompleted" to false,
             "userId" to currentUserId,
             "createdAt" to System.currentTimeMillis(),
-            "priority" to priority // Используем выбранный приоритет
+            "priority" to priority
         )
 
         db.collection("tasks")
             .add(task)
             .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Задача добавлена ✨", Toast.LENGTH_SHORT).show()
-                updateUserTaskStats(incrementCreated = true)
+                Toast.makeText(requireContext(), "Занятие добавлено в график ✨", Toast.LENGTH_SHORT).show()
                 animateTaskAdded()
-                // Перезагружаем задачи для текущей даты
-                loadTasksForDate(selectedDate)
+                // Перезагружаем график для текущей даты с анимацией
+                loadTasksForDate(selectedDate, animate = true)
             }
             .addOnFailureListener { e ->
                 Toast.makeText(requireContext(), "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -542,7 +586,7 @@ class FocusFragment : Fragment() {
         daySpinner.visibility = View.GONE
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Редактировать задачу")
+            .setTitle("Редактировать занятие")
             .setView(dialogView)
             .create()
 
@@ -551,7 +595,7 @@ class FocusFragment : Fragment() {
         saveBtn.setOnClickListener {
             val title = titleInput.text.toString().trim()
             if (title.isEmpty()) {
-                titleInput.error = "Введите название"
+                titleInput.error = "Введите название занятия"
                 return@setOnClickListener
             }
 
@@ -593,9 +637,9 @@ class FocusFragment : Fragment() {
             .document(taskId)
             .update(updates)
             .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Задача обновлена", Toast.LENGTH_SHORT).show()
-                // Перезагружаем задачи для текущей даты
-                loadTasksForDate(selectedDate)
+                Toast.makeText(requireContext(), "Занятие обновлено", Toast.LENGTH_SHORT).show()
+                // Перезагружаем график для текущей даты с анимацией
+                loadTasksForDate(selectedDate, animate = true)
             }
             .addOnFailureListener { e ->
                 Toast.makeText(requireContext(), "Ошибка обновления", Toast.LENGTH_SHORT).show()
@@ -604,16 +648,16 @@ class FocusFragment : Fragment() {
 
     private fun deleteTask(taskId: String) {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Удалить задачу")
-            .setMessage("Вы уверены, что хотите удалить эту задачу?")
+            .setTitle("Удалить занятие")
+            .setMessage("Вы уверены, что хотите удалить это занятие из графика?")
             .setPositiveButton("Удалить") { dialog, _ ->
                 db.collection("tasks")
                     .document(taskId)
                     .delete()
                     .addOnSuccessListener {
-                        Toast.makeText(requireContext(), "Задача удалена", Toast.LENGTH_SHORT).show()
-                        // Перезагружаем задачи для текущей даты
-                        loadTasksForDate(selectedDate)
+                        Toast.makeText(requireContext(), "Занятие удалено", Toast.LENGTH_SHORT).show()
+                        // Перезагружаем график для текущей даты с анимацией
+                        loadTasksForDate(selectedDate, animate = true)
                     }
                     .addOnFailureListener { e ->
                         Toast.makeText(requireContext(), "Ошибка удаления: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -622,47 +666,6 @@ class FocusFragment : Fragment() {
             }
             .setNegativeButton("Отмена", null)
             .show()
-    }
-
-    private fun updateTaskStatus(taskId: String, isCompleted: Boolean, task: Task) {
-        db.collection("tasks")
-            .document(taskId)
-            .update("isCompleted", isCompleted)
-            .addOnSuccessListener {
-                if (isCompleted && !task.isCompleted) {
-                    updateUserTaskStats(incrementCompleted = true)
-                    showConfettiAnimation()
-                }
-                // Обновляем UI задачи (например, меняем цвет или иконку)
-                loadTasksForDate(selectedDate)
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(requireContext(), "Ошибка обновления", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun showConfettiAnimation() {
-        // Простая анимация
-        val confettiView = TextView(requireContext())
-        confettiView.text = "🎉"
-        confettiView.textSize = 48f
-        confettiView.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        confettiView.x = requireView().width / 2f
-        confettiView.y = requireView().height / 2f
-
-        (requireView() as ViewGroup).addView(confettiView)
-
-        confettiView.animate()
-            .translationY(-100f)
-            .alpha(0f)
-            .setDuration(1000)
-            .withEndAction {
-                (requireView() as ViewGroup).removeView(confettiView)
-            }
-            .start()
     }
 
     private fun animateTaskAdded() {
@@ -678,30 +681,6 @@ class FocusFragment : Fragment() {
                     .start()
             }
             .start()
-    }
-
-    private fun updateUserTaskStats(
-        incrementCompleted: Boolean = false,
-        incrementCreated: Boolean = false
-    ) {
-        val updates = hashMapOf<String, Any>()
-
-        if (incrementCompleted) {
-            updates["totalTasksCompleted"] = FieldValue.increment(1)
-        }
-
-        if (incrementCreated) {
-            updates["totalTasksCreated"] = FieldValue.increment(1)
-        }
-
-        if (updates.isNotEmpty()) {
-            db.collection("users")
-                .document(currentUserId)
-                .update(updates)
-                .addOnFailureListener { e ->
-                    println("Ошибка обновления статистики: ${e.message}")
-                }
-        }
     }
 
     // Вспомогательные функции
@@ -757,7 +736,19 @@ class FocusFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         tasksListener?.remove()
-        floatingAnimators.forEach { it.cancel() }
-        floatingAnimators.clear()
     }
 }
+
+// Обновленная модель Task (убрано поле isCompleted)
+data class Task(
+    var id: String = "",
+    val title: String = "",
+    val description: String = "",
+    val dayOfWeek: String = "", // Понедельник, Вторник и т.д.
+    val date: String = "", // yyyy-MM-dd
+    var time: String = "", // HH:mm
+    val isRecurring: Boolean = false,
+    val userId: String = "",
+    val createdAt: Long = System.currentTimeMillis(),
+    val priority: Int = 2 // 1 - низкий, 2 - средний, 3 - высокий
+)
