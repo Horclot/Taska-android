@@ -21,11 +21,9 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingVertical="12dp">
-            <!-- Дни будут добавляться динамически -->
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- Временная лента с задачами -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,28 +39,46 @@
             android:elevation="6dp"
             android:padding="16dp">
 
-            <!-- Контейнер для временной ленты -->
+            <!-- Фоновые линии для плавных переходов -->
+            <View
+                android:id="@+id/backgroundTimeline"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="48dp"
+                android:background="@drawable/gradient_line_gray"
+                android:alpha="0.3"/>
+
+            <!-- Текущая временная линия (динамическая) с градиентом -->
+            <View
+                android:id="@+id/currentTimeLine"
+                android:layout_width="3dp"
+                android:layout_height="0dp"
+                android:background="@drawable/gradient_timeline"
+                android:visibility="gone"
+                android:elevation="10dp"
+                android:layout_marginStart="48dp"
+                android:alpha="0.8"/>
+
+            <!-- Контейнер для часовых делений -->
+            <LinearLayout
+                android:id="@+id/hourMarkersContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="16dp"/>
+
             <RelativeLayout
                 android:id="@+id/timelineWrapper"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
 
-                <!-- Вертикальная линия ленты - теперь в начале контейнера -->
-                <View
-                    android:id="@+id/timelineLine"
-                    android:layout_width="2dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="65dp"
-                    android:background="#2A2E38" />
-
-                <!-- Контейнер для задач -->
                 <LinearLayout
                     android:id="@+id/timelineContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="-13dp"
-                    android:paddingRight="16dp" />
+                    android:orientation="vertical" />
 
             </RelativeLayout>
 
