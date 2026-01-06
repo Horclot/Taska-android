@@ -5,42 +5,52 @@
     android:layout_height="wrap_content"
     android:paddingLeft="16dp">
 
-    <!-- Время слева -->
+    <!-- Вертикальная линия -->
+    <View
+        android:id="@+id/timelineLine"
+        android:layout_width="3dp"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient_line_blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/iconCircle"
+        app:layout_constraintStart_toStartOf="@id/iconCircle"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Время -->
     <TextView
         android:id="@+id/timeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:text="22:10"
         android:textColor="#9AA0A6"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@id/iconCircle"
+        app:layout_constraintEnd_toStartOf="@+id/iconCircle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/iconCircle" />
+        app:layout_constraintTop_toTopOf="@id/iconCircle" />
 
-    <!-- Иконка/точка - теперь в фиксированной позиции -->
+    <!-- Иконка -->
     <ImageView
         android:id="@+id/iconCircle"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="48dp"
         android:background="@drawable/bg_circle_blue"
-        android:contentDescription="Task icon"
         android:padding="8dp"
         android:src="@drawable/ic_default"
-        android:tint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="@+id/taskCard"
-        app:layout_constraintStart_toEndOf="@id/timeTextView"
-        app:layout_constraintTop_toTopOf="@+id/taskCard" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/timelineLine"
+        app:tint="#FFFFFF" />
 
-    <!-- Карточка занятия -->
+    <!-- Карточка -->
     <androidx.cardview.widget.CardView
         android:id="@+id/taskCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         app:cardBackgroundColor="#22252E"
         app:cardCornerRadius="16dp"
         app:cardElevation="0dp"
@@ -51,7 +61,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -73,7 +83,6 @@
                 android:textColor="#9AA0A6"
                 android:textSize="12sp"
                 android:visibility="gone" />
-
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
