@@ -16,6 +16,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -516,6 +518,36 @@ class FocusFragment : Fragment() {
         // Устанавливаем время начала как предзаполненное
         timeInput.setText(startTime)
 
+        // Добавляем Material Time Picker для поля времени
+        timeInput.setOnClickListener {
+            val calendar = Calendar.getInstance()
+
+            // Если время уже задано — парсим его
+            val current = timeInput.text.toString()
+            if (isValidTime(current)) {
+                val parts = current.split(":")
+                calendar.set(Calendar.HOUR_OF_DAY, parts[0].toInt())
+                calendar.set(Calendar.MINUTE, parts[1].toInt())
+            }
+
+            val picker = MaterialTimePicker.Builder()
+                .setTheme(R.style.ThemeOverlay_Taska_TimePicker)
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(calendar.get(Calendar.HOUR_OF_DAY))
+                .setMinute(calendar.get(Calendar.MINUTE))
+                .setTitleText("Выберите время")
+                .build()
+
+
+            picker.addOnPositiveButtonClickListener {
+                val h = picker.hour
+                val m = picker.minute
+                timeInput.setText(String.format("%02d:%02d", h, m))
+            }
+
+            picker.show(parentFragmentManager, "time_picker")
+        }
+
         // Добавляем подсказку о доступном времени
         timeInput.hint = "Начало (свободно до $endTime)"
 
@@ -525,10 +557,10 @@ class FocusFragment : Fragment() {
         priorityRadioGroup.check(R.id.priorityMedium)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Добавить занятие")
-            .setMessage("Свободное время: $startTime - $endTime")
             .setView(dialogView)
             .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         cancelBtn.setOnClickListener { dialog.dismiss() }
 
@@ -956,15 +988,46 @@ class FocusFragment : Fragment() {
         // Устанавливаем предзаполненное время
         timeInput.setText(prefilledTime)
 
+        // Добавляем Material Time Picker для поля времени
+        timeInput.setOnClickListener {
+            val calendar = Calendar.getInstance()
+
+            // Если время уже задано — парсим его
+            val current = timeInput.text.toString()
+            if (isValidTime(current)) {
+                val parts = current.split(":")
+                calendar.set(Calendar.HOUR_OF_DAY, parts[0].toInt())
+                calendar.set(Calendar.MINUTE, parts[1].toInt())
+            }
+
+            val picker = MaterialTimePicker.Builder()
+                .setTheme(R.style.ThemeOverlay_Taska_TimePicker)
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(calendar.get(Calendar.HOUR_OF_DAY))
+                .setMinute(calendar.get(Calendar.MINUTE))
+                .setTitleText("Выберите время")
+                .build()
+
+
+            picker.addOnPositiveButtonClickListener {
+                val h = picker.hour
+                val m = picker.minute
+                timeInput.setText(String.format("%02d:%02d", h, m))
+            }
+
+            picker.show(parentFragmentManager, "time_picker")
+        }
+
         // Фокусируемся на названии
         titleInput.requestFocus()
 
         priorityRadioGroup.check(R.id.priorityMedium)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Добавить занятие на $prefilledTime")
             .setView(dialogView)
             .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         cancelBtn.setOnClickListener { dialog.dismiss() }
 
@@ -1027,6 +1090,36 @@ class FocusFragment : Fragment() {
         timeInput.setText(task.time)
         isRecurringSwitch.isChecked = task.isRecurring
 
+        // Добавляем Material Time Picker для поля времени
+        timeInput.setOnClickListener {
+            val calendar = Calendar.getInstance()
+
+            // Если время уже задано — парсим его
+            val current = timeInput.text.toString()
+            if (isValidTime(current)) {
+                val parts = current.split(":")
+                calendar.set(Calendar.HOUR_OF_DAY, parts[0].toInt())
+                calendar.set(Calendar.MINUTE, parts[1].toInt())
+            }
+
+            val picker = MaterialTimePicker.Builder()
+                .setTheme(R.style.ThemeOverlay_Taska_TimePicker)
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(calendar.get(Calendar.HOUR_OF_DAY))
+                .setMinute(calendar.get(Calendar.MINUTE))
+                .setTitleText("Выберите время")
+                .build()
+
+
+            picker.addOnPositiveButtonClickListener {
+                val h = picker.hour
+                val m = picker.minute
+                timeInput.setText(String.format("%02d:%02d", h, m))
+            }
+
+            picker.show(parentFragmentManager, "time_picker")
+        }
+
         // Устанавливаем приоритет задачи
         when(task.priority) {
             1 -> priorityRadioGroup.check(R.id.priorityLow)
@@ -1039,9 +1132,10 @@ class FocusFragment : Fragment() {
         daySpinner.visibility = View.GONE
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Редактировать занятие")
             .setView(dialogView)
             .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         cancelBtn.setOnClickListener { dialog.dismiss() }
 
