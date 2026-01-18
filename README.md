@@ -1,127 +1,129 @@
-# Taska — умный менеджер задач для фокуса и продуктивности
+#Taska — a smart task manager for focus and productivity
 
-**Taska** — это Android-приложение для управления задачами с современным дизайном, real-time синхронизацией и акцентом на фокус в течение дня. Проект построен на Kotlin с использованием Firebase и Material Design 3.
+Taska is an Android task management app with a modern design, real-time synchronization, and a focus on focusing throughout the day. The project is built in Kotlin using Firebase and Material Design 3.
 
-На текущий момент реализованы три ключевых модуля:  
-**Авторизация**, **Профиль пользователя** и **Фокус (планировщик дня)**.
-
----
-
-## 🚀 Текущий функционал
-
-### 🔐 Авторизация
-- Вход через Google (Firebase Auth)
-- Создание и хранение профиля пользователя в Firestore
-- Управление сессией пользователя
-- Автоматическая синхронизация данных
+Currently, three key modules have been implemented:
+Authorization, User Profile, and Focus (Day Planner).
 
 ---
 
-### 👤 Профиль пользователя (`ProfileFragment`)
-- Отображение данных пользователя:
-  - Аватар, имя, email
-  - UID
-  - Статус (Free / Premium)
-- Настройки:
-  - Язык приложения (RU / EN)
-  - Светлая / тёмная тема
-  - Уведомления
-  - Дополнительные параметры (звук, вибрация, формат даты)
-- Быстрые действия:
-  - Редактирование профиля
-  - Переход к статистике (в разработке)
-  - Настройки безопасности
-- Premium-блок:
-  - Отображение статуса подписки
-  - Дата окончания Premium
-  - Анимация для Premium-пользователей
+## 🚀 Current Functionality
 
-**Технически:**
-- Real-time обновление данных через Firestore listeners  
-- Локальное сохранение настроек для офлайн-работы  
-- Material Design 3  
-- Плавные анимации элементов  
+### 🔐 Authorization
+- Login via Google (Firebase Auth)
+- Create and store user profile in Firestore
+- Manage user sessions
+- Automatic data synchronization
 
 ---
 
-### 🎯 Фокус / Планировщик дня (`FocusFragment`)
-- Таймлайн дня по часам
-- Отображение текущего времени с анимацией
-- Создание задач с указанием времени
-- Редактирование и удаление задач
-- Приоритеты задач:
-  - Низкий
-  - Средний
-  - Высокий
-- Цветовое кодирование приоритетов
-- Навигация по дням:
-  - Бесконечная прокрутка
-  - Выделение текущего дня
-  - Анимированные переходы
+### 👤 User Profile (`ProfileFragment`)
+- Display user data:
+- Avatar, name, email
+- UID
+- Status (Free / Premium)
+- Settings:
+- App language (RU / EN)
+- Light / dark theme
+- Notifications
+- Additional settings (sound, vibration, date format)
+- Quick actions:
+- Edit profile
+- Go to statistics (under development)
+- Security settings
+- Premium block:
+- Subscription status display
+- Premium expiration date
+- Animation for Premium users
 
-**Визуальные особенности:**
-- Градиенты для приоритетов  
-- Плавные цветовые переходы  
-- Анимация пульсации текущего времени  
-- Адаптивные карточки задач  
-
----
-
-## 🛠 Стек технологий
-
-- **Язык:** Kotlin  
-- **Архитектура:** MVVM  
-- **База данных:** Firebase Firestore  
-- **Аутентификация:** Firebase Auth  
-- **UI:** XML + Material Components  
-- **Асинхронность:** Kotlin Coroutines  
-- **Изображения:** Glide  
+**Technical:**
+- Real-time data updates via Firestore listeners
+- Local Saving settings for offline work
+- Material Design 3
+- Smooth element animations
 
 ---
 
-## 📁 Структура данных (Firestore)
+### 🎯 Focus / Day Planner (`FocusFragment`)
+- Day timeline by hour
+- Current time display with animation
+- Create tasks with time
+- Edit and delete tasks
+- Task priorities:
+- Low
+- Medium
+- High
+- Color-coded priorities
+- Day navigation:
+- Infinite scrolling
+- Current day highlight
+- Animated transitions
 
-- `users` — данные пользователей  
-- `tasks` — задачи пользователей  
-- `user_settings` — настройки  
-- `premium_subscriptions` — информация о подписке  
-
----
-
-## 📌 Ближайшие планы
-
-- 🔔 Уведомления и напоминания  
-- 📊 Статистика и аналитика  
-- 🧩 Пространства (Spaces) для команд  
-- 📴 Полноценный офлайн-режим  
-- 🧪 Unit и integration тесты  
-
----
-
-## 🧠 Идея проекта
-
-Taska объединяет:
-
-- Персональное планирование  
-- Тайм-менеджмент через визуальный таймлайн  
-- В будущем — командную работу и Git-подобную систему задач  
-
-Цель проекта — создать экосистему для продуктивности:  
-от личных задач до командных проектов.
+**Visual features:**
+- Priority gradients
+- Smooth color transitions
+- Current time pulsing animation
+- Adaptive task cards
 
 ---
 
-## 📷 Скриншоты
+## 🛠 Tech stack
 
-> Будут добавлены позже
+- **Language:** Kotlin
+- **Architecture:** MVVM
+- **Database:** Firebase Firestore
+- **Authentication:** Firebase Auth
+- **UI:** XML + Material Components
+- **Async:** Kotlin Coroutines
+- **Images:** Glide
 
 ---
 
-## 📄 Лицензия
+## 📁 Data Structure (Firestore)
 
-Проект распространяется под лицензией **Apache License 2.0**.
+- `users` — user data
+- `tasks` — user tasks
+- `user_settings` — settings
+- `premium_subscriptions` — subscription information
 
 ---
 
-**Taska** — это не просто список дел.  
-Это инструмент для осознанного управления временем.
+## 📌 Upcoming Plans
+
+- 🔔 Notifications and Reminders
+- 📊 Statistics and Analytics
+- 🧩 Spaces for Teams
+- 📴 Full Offline Mode
+- 🧪 Unit and Integration Tests
+
+---
+
+## 🧠 Project Idea
+
+Taska combines:
+
+- Personal planning
+- Time management through a visual timeline
+- In the future, teamwork and a Git-like task system
+
+The project's goal is to create a productivity ecosystem:
+
+from personal tasks to team projects.
+
+---
+
+## 📷 Screenshots
+
+> To be added later
+
+---
+
+## 📄 License
+
+The project is distributed under the **Apache License 2.0**.
+
+---
+
+**Taska** is more than just a to-do list.
+
+It's a tool for mindful time management.
