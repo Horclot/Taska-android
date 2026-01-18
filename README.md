@@ -1,4 +1,4 @@
-#Taska — a smart task manager for focus and productivity
+# Taska — a smart task manager for focus and productivity
 
 Taska is an Android task management app with a modern design, real-time synchronization, and a focus on focusing throughout the day. The project is built in Kotlin using Firebase and Material Design 3.
 
