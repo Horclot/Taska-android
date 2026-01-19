@@ -34,3 +34,9 @@ google-services.json
 *.hprof
 .DS_Store
 .DS_Store
+.DS_Store
+*.bkp
+*.tmp
+.idea/
+.gradle/
+build/
