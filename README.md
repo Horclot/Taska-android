@@ -9,17 +9,17 @@ Authorization, User Profile, and Focus (Day Planner).
 
 ## 📸 Screenshots
 
-### Profile Fragment
-![Profile Fragment Screenshot](screenshots/profile_fragment_screenshots.jpg)
-*User profile interface showing avatar, name, email and premium status*
+### 👤 Profile Fragment
+![Profile Fragment Screenshot](screenshots/profile_fragment_screenshots.jpg)  
+<sub>Персональный профиль пользователя — аватар, имя, статус подписки и быстрый доступ к настройкам</sub>
 
-### Focus Fragment  
-![Focus Fragment Screenshot](screenshots/focus_fragment_screenshots.jpg)
-*Day planner with timeline, task cards and priority colors*
+### 🎯 Focus Fragment  
+![Focus Fragment Screenshot](screenshots/focus_fragment_screenshots.jpg)  
+<sub>Дневной планировщик с временной шкалой, карточками задач и цветовой приоритизацией</sub>
 
-### Clear Focus Fragment
-![Clear Focus Fragment Screenshot](screenshots/clear_focus_fragment_screenshots.jpg)
-*Clean focus mode interface for distraction-free task management*
+### 🧘 Clear Focus Fragment
+![Clear Focus Fragment Screenshot](screenshots/clear_focus_fragment_screenshots.jpg)  
+<sub>Минималистичный режим концентрации для работы без отвлекающих элементов</sub>
 
 ---
 
