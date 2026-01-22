@@ -15,23 +15,37 @@ Authorization, User Profile, and Focus (Day Planner).
       <td align="center">
         <img src="screenshots/profile_fragment_screenshots.jpg" width="240"/>
         <br/>
-        <sub>Профиль пользователя — данные, статус и настройки</sub>
+        <sub>User profile - data, status and settings</sub>
       </td>
       <td align="center">
         <img src="screenshots/focus_fragment_screenshots.jpg" width="240"/>
         <br/>
-        <sub>Дневной планировщик с таймлайном и приоритетами</sub>
+        <sub>Daily planner with timeline and priorities</sub>
       </td>
       <td align="center">
         <img src="screenshots/clear_focus_fragment_screenshots.jpg" width="240"/>
         <br/>
-        <sub>Минималистичный режим концентрации</sub>
+        <sub>Minimalist concentration mode</sub>
       </td>
     </tr>
   </table>
 </div>
 
 ---
+
+## 🧭 User Flow
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="design/user_flow/user_flow.png" width="720"/>
+        <br/>
+        <sub>User flow diagram — the full path of user actions inside the app</sub>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ## 🚀 Current Functionality
 
