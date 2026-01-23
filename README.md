@@ -47,6 +47,83 @@ Authorization, User Profile, and Focus (Day Planner).
   </table>
 </div>
 
+🔄 Data Flow Diagram
+
+This diagram describes how data flows between the user, application
+screens, local storage, and Firebase services.
+```mermaid    
+    flowchart LR
+        U[User]
+        SYS[AndroidSystem]
+        CAM[CameraQR]
+        EXT[ExternalServices]
+
+        FS[(Firestore)]
+        AUTH[(FirebaseAuth)]
+        SP[(SharedPrefs)]
+        LC[(LocalCache)]
+
+        SA[StartActivity]
+        LA[LoginActivity]
+        MA[MainActivity]
+        PF[ProfileFragment]
+        FF[FocusFragment]
+        SF[SpaceFragment]
+
+        SYS -->|InsetsTheme| SA
+        U -->|BackStart| SA
+        SA -->|UIAnimations| U
+        SA -->|Navigate| LA
+        SA -->|FinishApp| SYS
+
+        U -->|GoogleSignIn| LA
+        LA -->|OAuthIntent| AUTH
+        AUTH -->|TokenAccount| LA
+        LA -->|CreateUpdateUser| FS
+        LA -->|SaveUserId| SP
+        LA -->|Navigate| MA
+        LA -->|ErrorsLoading| U
+
+        AUTH -->|CurrentUser| PF
+        FS -->|UserPremiumSettings| PF
+        SP -->|LocalSettings| PF
+        U -->|ProfileActions| PF
+        PF -->|UpdateSettings| FS
+        PF -->|SaveSettings| SP
+        PF -->|ThemeLanguage| SYS
+        PF -->|Navigate| MA
+        PF -->|UIUpdates| U
+
+        FS -->|TasksRealtime| FF
+        SYS -->|CurrentTime| FF
+        U -->|SelectEditAdd| FF
+        FF -->|CreateUpdateTask| FS
+        FF -->|DeleteTask| FS
+        FF -->|TimelineDialogs| U
+
+        FS -->|SpacesMembersTasksInvites| SF
+        AUTH -->|CurrentUser| SF
+        LC -->|CachedSpaces| SF
+        CAM -->|QRData| SF
+        EXT -->|AttachmentsDeadlines| SF
+
+        U -->|CreateSpace| SF
+        U -->|OpenSpace| SF
+        U -->|EditTreeRolesComments| SF
+        U -->|UploadFiles| SF
+
+        SF -->|CreateUpdateSpace| FS
+        SF -->|UpdateMembersRoles| FS
+        SF -->|CreateMoveDeleteTasks| FS
+        SF -->|CreateInvites| FS
+        SF -->|RealtimeChanges| U
+
+        SF -->|CacheSpaces| LC
+        SF -->|SyncOffline| FS
+        SF -->|ConflictsNotifications| U
+        SF -->|TreeProgressBoard| U
+```
+
 ## 🚀 Current Functionality
 
 ### 🔐 Authorization
