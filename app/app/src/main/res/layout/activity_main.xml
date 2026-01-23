@@ -17,7 +17,7 @@
             android:background="#1C1F26"
             app:popupTheme="@style/Theme.Taska.PopupOverlay"
             app:title="Taska"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="#00FFFFFF" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
