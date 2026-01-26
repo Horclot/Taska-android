@@ -33,8 +33,21 @@
         <!-- Основной экран -->
         <activity
             android:name=".MainActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Taska" />
+            android:exported="true"
+            android:theme="@style/Theme.Taska">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="taska.app"
+                    android:pathPrefix="/invite" />
+            </intent-filter>
+
+        </activity>
 
     </application>
 
