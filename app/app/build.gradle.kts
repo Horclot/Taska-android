@@ -41,6 +41,8 @@ android {
 
 dependencies {
 
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+
     implementation ("com.google.firebase:firebase-firestore-ktx:24.10.0")
 
     implementation ("com.google.android.material:material:1.11.0")
