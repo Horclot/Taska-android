@@ -24,25 +24,6 @@ class SpacesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.fragment_spaces, container, false)
-
-        val addButton = view.findViewById<View>(R.id.addButton)
-        addButton.setOnClickListener {
-            CreateRoomBottomSheet().show(parentFragmentManager, "create_room")
-        }
-
-        addButton.setOnLongClickListener {
-            qrLauncher.launch(
-                com.journeyapps.barcodescanner.ScanOptions()
-                    .setPrompt("Отсканируйте QR пространства")
-                    .setBeepEnabled(true)
-                    .setOrientationLocked(true)
-            )
-            true
-        }
-
-
-
-
         return view
     }
 }

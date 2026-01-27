@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0F1115"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_back"
+                app:tint="#FFFFFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="Новое пространство"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Задайте цель и параметры будущего пространства"
+            android:textColor="#9EA3AE"
+            android:textSize="14sp" />
+
+        <!-- Name -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="#1A1C23"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Имя / Цель *"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input_dark"
+                android:hint="Например: Разработка мобильного приложения"
+                android:padding="12dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#A5A5A9" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Кратко сформулируйте основную цель"
+                android:textColor="#6B7280"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Description -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="#1A1C23"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Описание"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etDescription"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input_dark"
+                android:gravity="top"
+                android:hint="Опишите, для чего создаётся это пространство, какие задачи здесь будут решаться"
+                android:padding="12dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#A5A5A9" />
+        </LinearLayout>
+
+        <!-- Code -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#1A1C23"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Уникальный код пространства"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/etCode"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input_dark"
+                    android:padding="12dp"
+                    android:text="ghj3rKw2$fl1"
+                    android:textColor="#FFFFFF" />
+
+                <ImageButton
+                    android:id="@+id/btnCopy"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_input_dark"
+                    android:contentDescription="Скопировать код"
+                    android:src="@drawable/ic_copy"
+                    app:tint="#FF6B6B" />
+
+                <ImageButton
+                    android:id="@+id/btnGenerate"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_input_dark"
+                    android:contentDescription="Скопировать код"
+                    android:src="@drawable/ic_generate"
+                    app:tint="#E5EF05" />
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Этот код можно использовать для приглашения участников"
+                android:textColor="#6B7280"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Continue -->
+        <Button
+            android:id="@+id/btnContinue"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#FF6B6B"
+            android:text="Продолжить"
+            android:textColor="#FFFEFD"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</ScrollView>
