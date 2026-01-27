@@ -42,9 +42,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
-                    android:host="taska.app"
-                    android:pathPrefix="/invite" />
+                    android:scheme="taska"
+                    android:host="invite" />
             </intent-filter>
 
         </activity>
