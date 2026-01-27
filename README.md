@@ -23,6 +23,11 @@ Authorization, User Profile, and Focus (Day Planner).
         <sub>Daily planner with timeline and priorities</sub>
       </td>
       <td align="center">
+        <img src="screenshots/NewSpaceCreateFragment.png" width="240"/>
+        <br/>
+        <sub>Fragment of creating a new space</sub>
+      </td>
+      <td align="center">
         <img src="screenshots/clear_focus_fragment_screenshots.jpg" width="240"/>
         <br/>
         <sub>Minimalist concentration mode</sub>
