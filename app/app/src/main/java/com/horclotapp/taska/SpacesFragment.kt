@@ -7,14 +7,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 
-class SpacesFragment : Fragment() {
-    private val qrLauncher = registerForActivityResult(
-        com.journeyapps.barcodescanner.ScanContract()
-    ) { result ->
-        if (result.contents != null) {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(result.contents))
-            startActivity(intent)
+class SpacesFragment : Fragment(R.layout.fragment_spaces) {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val addButton = view.findViewById<ImageButton>(R.id.addButton)
+
+        addButton.setOnClickListener {
+            childFragmentManager.beginTransaction()
+                .replace(R.id.spacesContainer, NewSpaceCreateFragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 
