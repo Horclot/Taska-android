@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0F1115"
@@ -23,7 +25,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_back"
-                android:tint="#FFFFFF"/>
+                android:tint="#FFFFFF" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -32,7 +34,7 @@
                 android:text="Новое пространство"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <TextView
@@ -41,9 +43,10 @@
             android:layout_marginTop="4dp"
             android:text="Шаг 2 из 2. Пригласите участников"
             android:textColor="#9EA3AE"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <!-- Tabs -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -56,16 +59,16 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:backgroundTint="#FF6B6B"
-                android:text="Ссылка"/>
+                android:text="Ссылка" />
 
             <Button
                 android:id="@+id/btnQrMode"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                android:backgroundTint="#313642"
-                android:text="QR Code"/>
+                android:layout_weight="1"
+                android:backgroundTint="#2A2E38"
+                android:text="QR Code" />
         </LinearLayout>
 
         <!-- Link mode -->
@@ -80,24 +83,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#8A8F98"
-                android:text="Пригласите участников с помощью ссылки"/>
+                android:text="Пригласите участников с помощью ссылки" />
 
-            <TextView
-                android:id="@+id/tvLink"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
-                android:padding="12dp"
-                android:background="#1A1C23"
-                android:textColor="#FFFFFF"/>
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnCopyLink"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginTop="12dp"
-                android:backgroundTint="#FF6B6B"
-                android:text="Скопировать ссылку" />
+                <TextView
+                    android:id="@+id/tvLink"
+                    android:layout_width="250dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_input_dark"
+                    android:padding="12dp"
+                    android:textColor="#FFFFFF" />
+
+                <ImageButton
+                    android:id="@+id/btnCopyLink"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_input_dark"
+                    android:contentDescription="Скопировать код"
+                    android:src="@drawable/ic_copy"
+                    app:tint="#FFFFFF" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <!-- QR mode -->
@@ -106,29 +118,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:visibility="gone"
-            android:gravity="center_horizontal">
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/ivQr"
                 android:layout_width="220dp"
-                android:layout_height="220dp"/>
+                android:layout_height="220dp" />
 
             <Button
                 android:id="@+id/btnSaveQr"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:layout_marginStart="64dp"
                 android:layout_marginTop="12dp"
-                android:text="Скачать QR-код"/>
+                android:layout_marginEnd="64dp"
+                android:backgroundTint="#FF6B6B"
+                android:text="Скачать QR-код" />
         </LinearLayout>
 
         <Button
             android:id="@+id/btnFinish"
             android:layout_width="match_parent"
             android:layout_height="56dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
             android:backgroundTint="#FF6B6B"
-            android:text="ЗАВЕРШИТЬ"/>
+            android:text="ЗАВЕРШИТЬ" />
     </LinearLayout>
 </ScrollView>
