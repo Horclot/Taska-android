@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0F1115">
@@ -33,7 +34,7 @@
                 android:layout_alignParentEnd="true"
                 android:background="@android:color/transparent"
                 android:src="@android:drawable/ic_input_add"
-                android:tint="#FF6B6B" />
+                app:tint="#FF6B6B" />
 
         </RelativeLayout>
 
@@ -75,5 +76,10 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/spacesContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </FrameLayout>
