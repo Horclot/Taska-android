@@ -27,6 +27,16 @@ Authorization, User Profile, and Focus (Day Planner).
         <br/>
         <sub>Fragment of creating a new space</sub>
       </td>
+       <td align="center">
+        <img src="screenshots/Invitations to QR code space.jpg" width="240"/>
+        <br/>
+        <sub>Invitations to space with a QR code</sub>
+      </td>
+       <td align="center">
+        <img src="screenshots/Invitations to space link.jpg" width="240"/>
+        <br/>
+        <sub>Invitations to space by link</sub>
+      </td>
       <td align="center">
         <img src="screenshots/clear_focus_fragment_screenshots.jpg" width="240"/>
         <br/>
