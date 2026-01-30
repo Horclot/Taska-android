@@ -1,0 +1,21 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/ivQr"
+        android:layout_width="220dp"
+        android:layout_height="220dp"/>
+
+    <Button
+        android:id="@+id/btnSaveQr"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="64dp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#FF6B6B"
+        android:text="Скачать QR-код" />
+</LinearLayout>

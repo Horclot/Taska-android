@@ -16,13 +16,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.viewpager2.widget.ViewPager2
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 
 class NewSpaceInviteFragment : Fragment(R.layout.fragment_new_space_invite) {
 
     companion object {
-        fun newInstance(name: String, desc: String, code: String): NewSpaceInviteFragment {
+        fun newInstance(
+            name: String,
+            desc: String,
+            code: String
+        ): NewSpaceInviteFragment {
             return NewSpaceInviteFragment().apply {
                 arguments = bundleOf(
                     "name" to name,
@@ -33,97 +38,42 @@ class NewSpaceInviteFragment : Fragment(R.layout.fragment_new_space_invite) {
         }
     }
 
-    private lateinit var linkContainer: View
-    private lateinit var qrContainer: View
-    private lateinit var tvLink: TextView
-    private lateinit var ivQr: ImageView
-
-    private lateinit var inviteLink: String
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         val code = requireArguments().getString("code")!!
-        inviteLink = "https://example.com/join/$code"
+        val inviteLink = "https://example.com/join/$code"
 
-        linkContainer = view.findViewById(R.id.linkContainer)
-        qrContainer = view.findViewById(R.id.qrContainer)
-        tvLink = view.findViewById(R.id.tvLink)
-        ivQr = view.findViewById(R.id.ivQr)
-
-
-
-        val btnLinkMode = view.findViewById<Button>(R.id.btnLinkMode)
-        val btnQrMode = view.findViewById<Button>(R.id.btnQrMode)
-        val btnCopy = view.findViewById<Button>(R.id.btnCopyLink)
+        val btnLink = view.findViewById<Button>(R.id.btnLinkMode)
+        val btnQr = view.findViewById<Button>(R.id.btnQrMode)
         val btnBack = view.findViewById<ImageView>(R.id.btnBack)
+        val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
 
-        setMode(true, btnLinkMode, btnQrMode)
+        viewPager.adapter = InvitePagerAdapter(this, inviteLink)
 
-        tvLink.text = inviteLink
-        ivQr.setImageBitmap(generateQr(inviteLink))
-
-        btnLinkMode.setOnClickListener {
-            setMode(true, btnLinkMode, btnQrMode)
-            linkContainer.visibility = View.VISIBLE
-            qrContainer.visibility = View.GONE
+        btnLink.setOnClickListener {
+            viewPager.currentItem = 0
         }
 
-        btnQrMode.setOnClickListener {
-            setMode(false, btnLinkMode, btnQrMode)
-            linkContainer.visibility = View.GONE
-            qrContainer.visibility = View.VISIBLE
+        btnQr.setOnClickListener {
+            viewPager.currentItem = 1
         }
 
-        btnCopy.setOnClickListener {
-            val cm = requireContext()
-                .getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            cm.setPrimaryClip(ClipData.newPlainText("link", inviteLink))
-            Toast.makeText(requireContext(), "Ссылка скопирована", Toast.LENGTH_SHORT).show()
-        }
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                val active = Color.parseColor("#FF6B6B")
+                val inactive = Color.parseColor("#313642")
+
+                btnLink.backgroundTintList =
+                    ColorStateList.valueOf(if (position == 0) active else inactive)
+                btnQr.backgroundTintList =
+                    ColorStateList.valueOf(if (position == 1) active else inactive)
+            }
+        })
 
         btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
-
-
-    }
-
-    private fun setMode(isLink: Boolean, btnLink: Button, btnQr: Button) {
-        if (isLink) {
-            linkContainer.visibility = View.VISIBLE
-            qrContainer.visibility = View.GONE
-
-            btnLink.setBackgroundTintList(
-                ColorStateList.valueOf(Color.parseColor("#FF6B6B"))
-            )
-            btnQr.setBackgroundTintList(
-                ColorStateList.valueOf(Color.parseColor("#313642"))
-            )
-        } else {
-            linkContainer.visibility = View.GONE
-            qrContainer.visibility = View.VISIBLE
-
-            btnLink.setBackgroundTintList(
-                ColorStateList.valueOf(Color.parseColor("#313642"))
-            )
-            btnQr.setBackgroundTintList(
-                ColorStateList.valueOf(Color.parseColor("#FF6B6B"))
-            )
-        }
-    }
-
-    private fun generateQr(text: String): Bitmap {
-        val size = 600
-        val bits = QRCodeWriter().encode(text, BarcodeFormat.QR_CODE, size, size)
-        val bmp = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565)
-        for (x in 0 until size) {
-            for (y in 0 until size) {
-                bmp.setPixel(x, y, if (bits[x, y]) Color.BLACK else Color.WHITE)
-            }
-        }
-        return bmp
     }
 }
+
