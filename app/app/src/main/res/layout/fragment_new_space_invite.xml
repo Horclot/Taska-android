@@ -37,12 +37,12 @@
         </LinearLayout>
 
         <TextView
-            android:layout_marginTop="4dp"
-            android:text="Шаг 2 из 2. Пригласите участников"
-            android:textColor="#9EA3AE"
-            android:textSize="14sp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Шаг 2 из 4. Пригласите участников"
+            android:textColor="#9EA3AE"
+            android:textSize="14sp" />
 
         <!-- Tabs -->
         <LinearLayout
@@ -53,20 +53,22 @@
 
             <Button
                 android:id="@+id/btnLinkMode"
-                android:layout_weight="1"
-                android:text="Ссылка"
-                android:backgroundTint="#FF6B6B"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="#FF6B6B"
+                android:text="Ссылка"
+                android:textAllCaps="false" />
 
             <Button
                 android:id="@+id/btnQrMode"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="QR Code"
                 android:backgroundTint="#313642"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"/>
+                android:text="QR Code"
+                android:textAllCaps="false" />
         </LinearLayout>
 
         <!-- ViewPager -->
@@ -76,12 +78,21 @@
             android:layout_height="300dp"
             android:layout_marginTop="16dp" />
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Пригласите участников, отправив им ссылку или QR-код. Они смогут присоединиться к пространству за несколько секунд."
+            android:textColor="#9EA3AE" />
+
         <Button
             android:id="@+id/btnFinish"
-            android:layout_marginTop="24dp"
-            android:text="ЗАВЕРШИТЬ"
-            android:backgroundTint="#FF6B6B"
             android:layout_width="match_parent"
-            android:layout_height="56dp"/>
+            android:layout_height="56dp"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="#FF6B6B"
+            android:text="Далее"
+            android:textAllCaps="false" />
     </LinearLayout>
 </ScrollView>
