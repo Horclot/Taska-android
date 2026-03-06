@@ -34,19 +34,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Taska">
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:scheme="taska"
-                    android:host="invite" />
-            </intent-filter>
-
-        </activity>
+            android:theme="@style/Theme.Taska" />
 
     </application>
 
